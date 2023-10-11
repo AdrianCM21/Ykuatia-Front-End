@@ -21,6 +21,7 @@ import { MainMenuItems } from './MenuItems';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Button } from '@mui/material';
+import LogoutButton from './LogoutButton';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -126,13 +127,12 @@ const Layout = ({ children, sectionTitle ,Action,actionText}: IProps) => {
               noWrap
               sx={{ flexGrow: 1 }}
             >
-              Dashboard
+              Ykuatia ñangareko
             </Typography>
-            <IconButton color="inherit">
+            
               <Badge color="secondary">
-                <NotificationsIcon />
+                <LogoutButton/>
               </Badge>
-            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>
