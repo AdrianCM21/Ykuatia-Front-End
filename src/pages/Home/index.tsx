@@ -1,9 +1,13 @@
 import Layout from "../../components/layout/Layout"
+import MapComponent from "../../components/maps/MapComponent"
 
 const Home = () => {
     return (
         <Layout>
-              <div></div>  
+            <div style={{width:'200px'}}>
+               <MapComponent />  
+            </div>
+              
         </Layout>    
     )
 }
