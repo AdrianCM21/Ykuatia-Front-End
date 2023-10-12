@@ -8,15 +8,11 @@ interface IResponseError{
 }
 
 export default interface IResponseErrorCustomer{
-    ruc:IResponseError
+    cedula:IResponseError
     direccion:IResponseError
-    email:IResponseError
     telefono:IResponseError
-    celular:IResponseError
-    razon_social:IResponseError
-    nombre_fantasia:IResponseError
-    ciudad:IResponseError
-    departamento:IResponseError
-    distrito:IResponseError
+    nombre:IResponseError
+    longitud:IResponseError
+    latitud:IResponseError
     
 }

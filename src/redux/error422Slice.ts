@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 import IErrorResponse422 from '../interfaces/response/errors';
 // Inicializamos las variable, En caso de querer implementar en otras partes del codigo añada el nombre de la variable e inicializela entre [], 
 const initialState={
-   ruc:[] ,telefono:[],razon_social:[],celular:[],direccion:[],nombre_fantacia:[],email:[],codigo:[],iva:[],stock:[],limiteStock:[],precio:[],departamento:[],distrito:[],ciudad:[]}
+   cedula:[] ,telefono:[],nombre:[],direccion:[],longitud:[],latitud:[],codigo:[],iva:[],stock:[],limiteStock:[],precio:[],departamento:[],distrito:[],ciudad:[]}
 export const error422Slice = createSlice({
     
     name:"error422",

@@ -43,28 +43,18 @@ const Customer = () => {
         },
         {
             flex: 0.25,
-            field: 'ruc',
-            headerName: 'RUC'
+            field: 'cedula',
+            headerName: 'Cedula'
         },
         {
             flex: 0.25,
-            field: 'razon_social',
-            headerName: 'Razón Social'
+            field: 'nombre',
+            headerName: 'Nombre'
         },
         {
             flex: 0.25,
-            field: 'nombre_fantasia',
-            headerName: 'Nombre Fantasía'
-        },
-        {
-            flex: 0.25,
-            field: 'telefono',
-            headerName: 'Teléfono'
-        },
-        {
-            flex: 0.25,
-            field: 'celular',
-            headerName: 'Celular'
+            field: 'direccion',
+            headerName: 'Direccion'
         },
         {
             field: 'actions',
@@ -105,13 +95,13 @@ const Customer = () => {
         try {
             
           if (current) {
-            const response = await CustomerService.updateCustomer(formFields)
+            const response = await CustomerService.updateCliente(formFields)
             setCustomers(customers.map(customer => customer.id == response.id ? response : customer))
 
             toast.success('Cliente actualizado correctamente');
           } else {
             console.log(formFields)
-            const response = await CustomerService.addCustomer(formFields)
+            const response = await CustomerService.addCliente(formFields)
             
             setCustomers([response, ...customers])
             
@@ -144,7 +134,7 @@ const Customer = () => {
     const handleDeleteSubmit = async () => {
         setDeleteLoading(true);
         try {
-            const response = await CustomerService.deleteCustomer(String(current?.id))
+            const response = await CustomerService.deleteCliente(String(current?.id))
             setCustomers(customers.filter(customer => customer.id != current?.id))
             toast.success('Eliminado correctamente');
         } catch (error) {

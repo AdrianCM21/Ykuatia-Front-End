@@ -7,7 +7,7 @@ import IResponseCustomer from "../../interfaces/customers/ResponsCustomers";
 
 const getCustomers = async (page:number) => {
     try {
-        const { data: response}: AxiosResponse<IResponseCustomer> = await axios.get('/api/customers',{params: {
+        const { data: response}: AxiosResponse<IResponseCustomer> = await axios.get('/api/cliente',{params: {
             desde: paginationNro.paginationNro*(page-1)
            }})
     
@@ -26,9 +26,9 @@ const getCustomerRuc =async(ruc:string)=>{
         return Promise.reject(error)
     }
 }
-const addCustomer = async (data: ICustomer) => {
+const addCliente = async (data: ICustomer) => {
     try {
-        const { data: response}: AxiosResponse<ICustomer> = await axios.post('/api/customers', data)
+        const { data: response}: AxiosResponse<ICustomer> = await axios.post('/api/cliente', data)
 
         return response
     } catch (error) {
@@ -36,12 +36,12 @@ const addCustomer = async (data: ICustomer) => {
     }
 }
 
-const updateCustomer = async (data: ICustomer) => {
+const updateCliente = async (data: ICustomer) => {
     const { id } = data
     const { id: _, ...values } = data
 
     try {
-        const { data: response}: AxiosResponse<ICustomer> = await axios.put('/api/customers/'+id, values)
+        const { data: response}: AxiosResponse<ICustomer> = await axios.put('/api/cliente/'+id, values)
 
         return response
     } catch (error) {
@@ -50,9 +50,9 @@ const updateCustomer = async (data: ICustomer) => {
     }
 }
 
-const deleteCustomer = async (id: string) => {
+const deleteCliente = async (id: string) => {
     try {
-        const { data: response}: AxiosResponse = await axios.delete('/api/customers/'+id)
+        const { data: response}: AxiosResponse = await axios.delete('/api/cliente/'+id)
 
         return response
     } catch (error) {
@@ -61,4 +61,4 @@ const deleteCustomer = async (id: string) => {
     }
 }
 
-export { getCustomers, addCustomer, updateCustomer, deleteCustomer ,getCustomerRuc}
+export { getCustomers, addCliente, updateCliente, deleteCliente ,getCustomerRuc}
