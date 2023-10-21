@@ -53,6 +53,11 @@ const Customer = () => {
         },
         {
             flex: 0.25,
+            field: 'telefono',
+            headerName: 'Telefono'
+        },
+        {
+            flex: 0.25,
             field: 'direccion',
             headerName: 'Direccion'
         },
@@ -81,7 +86,9 @@ const Customer = () => {
         setLoading(true)
         try {
             const response = await CustomerService.getCustomers(page)
+            //@ts-ignore
             setPageNro(Math.ceil((response.total/paginationNro.paginationNro)))
+             //@ts-ignore
             setCustomers(response.resultado)
         } catch (error) {
             toast.error('Error de listado')
