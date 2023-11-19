@@ -30,6 +30,7 @@ const Customer = () => {
     // Variables para paginacion
   const [page, setPage] = useState<number>(1)
   const [pageNro, setPageNro] = useState<number>(0)
+  const [refres,setRefres] = useState<number>(1)
     
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -43,14 +44,15 @@ const Customer = () => {
         },
         {
             flex: 0.25,
-            field: 'cedula',
-            headerName: 'Cedula'
-        },
-        {
-            flex: 0.25,
             field: 'nombre',
             headerName: 'Nombre'
         },
+        {
+            flex: 0.25,
+            field: 'cedula',
+            headerName: 'Cedula'
+        },
+      
         {
             flex: 0.25,
             field: 'telefono',
@@ -60,6 +62,12 @@ const Customer = () => {
             flex: 0.25,
             field: 'direccion',
             headerName: 'Direccion'
+        },
+        {
+            flex: 0.25,
+            field: 'tipoCliente',
+            headerName: 'Tipo Cliente',
+            valueGetter: (params) => params.row.tipoCliente ? params.row.tipoCliente.descripcion : ''
         },
         {
             field: 'actions',
@@ -80,7 +88,7 @@ const Customer = () => {
 
     useEffect(() => {
         getCustomers()
-    }, [page])
+    }, [page,refres])
 
     const getCustomers = async () => {
         setLoading(true)
@@ -103,7 +111,7 @@ const Customer = () => {
             
           if (current) {
             const response = await CustomerService.updateCliente(formFields)
-            setCustomers(customers.map(customer => customer.id == response.id ? response : customer))
+            setRefres(refres?0:1)
 
             toast.success('Cliente actualizado correctamente');
           } else {
@@ -129,7 +137,14 @@ const Customer = () => {
     }
 
     const handleRowClick = (row: GridRowParams<ICustomer>) => {
-        setCurrent(row.row)
+        //@ts-ignore
+        if(row.row.tipoCliente && row.row.tipoCliente.id_tipo){
+            //@ts-ignore
+            setCurrent({...row.row,tipoCliente:row.row.tipoCliente.id_tipo})
+        }else{
+            setCurrent(row.row)
+        }
+       
         setOpenAddEditDialog(true)
     };
 

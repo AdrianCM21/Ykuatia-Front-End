@@ -3,6 +3,7 @@ import { AxiosResponse } from "axios";
 import ICustomer from "../../interfaces/customers/Customer";
 import paginationNro from "../../config/paginationNro";
 import IResponseCustomer from "../../interfaces/customers/Customer";
+import ICustomertypes from "../../interfaces/customers/CustomersTypes";
 
 
 const getCustomers = async (page:number) => {
@@ -10,12 +11,23 @@ const getCustomers = async (page:number) => {
         const { data: response}: AxiosResponse<IResponseCustomer> = await axios.get('/api/cliente',{params: {
             desde: paginationNro.paginationNro*(page-1)
            }})
-    
+           console.log(response)
         return response
     } catch (error) {
         return Promise.reject(error)
     }
 }
+
+const getTipoCliente = async () => {
+    try {
+        const { data: response}: AxiosResponse<ICustomertypes[]> = await axios.get('/api/clientetipo')
+        
+        return response
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
+
 
 const getCustomerRuc =async(ruc:string)=>{
     try {
@@ -29,7 +41,7 @@ const getCustomerRuc =async(ruc:string)=>{
 const addCliente = async (data: ICustomer) => {
     try {
         const { data: response}: AxiosResponse<ICustomer> = await axios.post('/api/cliente', data)
-
+       
         return response
     } catch (error) {
         return Promise.reject(error)
@@ -61,4 +73,4 @@ const deleteCliente = async (id: string) => {
     }
 }
 
-export { getCustomers, addCliente, updateCliente, deleteCliente ,getCustomerRuc}
+export { getCustomers, addCliente, updateCliente, deleteCliente ,getCustomerRuc,getTipoCliente}

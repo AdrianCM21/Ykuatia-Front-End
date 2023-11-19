@@ -10,6 +10,8 @@ import {  useSelector } from "react-redux";
 import IResponseErrorCustomer from "../../../interfaces/customers/ResponsErrorCustomers";
 import FormHeader from "../../../components/FormHeader";
 import { datosUbicacion } from "../../../static/datosUbicacion";
+import { getTipoCliente } from "../../../services/Customers/CustomerService";
+import ICustomertypes from "../../../interfaces/customers/CustomersTypes";
 
 interface IProps {
     open: boolean
@@ -25,12 +27,30 @@ const CustomerAddEditDialog = ({ open, loading, onSubmit, onClose, current }: IP
         id: current?.id ?? undefined,
         cedula: current?.cedula ?? '',
         nombre: current?.nombre ?? '',
-        longitud: current?.longitud ?? '',
-        latitud: current?.latitud ?? '',
         direccion: current?.direccion ?? '',
-        telefono: current?.telefono ?? ''
+        telefono: current?.telefono ?? '',
+        tipoCliente:current?.tipoCliente ?? '',
           }
 
+    console.log(defaultValues)
+    //Obtencion de datos de tipo cliente para el select
+    const [tipoCliente, setTipoCliente] = useState<ICustomertypes[]>([]);
+    const [loadingSelect,setLoadingSelect] = useState<Boolean>(true)
+    useEffect(() => {
+      
+    getTiposSelect()
+      
+    }, [])
+
+    const getTiposSelect= async()=>{
+        try {
+            const response = await getTipoCliente()
+            setTipoCliente(response)
+            setLoadingSelect(false)
+        } catch (error) {
+            
+        }
+    }
     //@ts-ignore
     const error422:IResponseErrorCustomer=useSelector((state)=>state.error422)
     const {
@@ -75,23 +95,7 @@ const CustomerAddEditDialog = ({ open, loading, onSubmit, onClose, current }: IP
                 </DialogTitle>
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <DialogContent sx={{ py: 0 }}>
-                        <FormControl fullWidth sx={{ mb: 2 }}>
-                            <Controller
-                                name='cedula'
-                                control={control}
-                                render={({ field: { value, onChange } }) => (
-                                    <TextField
-                                        value={value}
-                                        label='CEDULA'
-                                        onChange={onChange}
-                                        error={Boolean(errors.cedula)}
-                                    />
-                                )}
-                            />
-                            {errors.cedula && <FormHelperText sx={{ color: 'error.main' }}>{errors.cedula.message}</FormHelperText>}
-                            {error422.cedula && <FormHelperText sx={{ color: 'error.main' }}>{error422.cedula.msg}</FormHelperText>}
-
-                        </FormControl>
+                       
                         <FormControl fullWidth sx={{ mb: 2 }}>
                             <Controller
                                 name='nombre'
@@ -107,7 +111,24 @@ const CustomerAddEditDialog = ({ open, loading, onSubmit, onClose, current }: IP
                             />
                             {errors.nombre && <FormHelperText sx={{ color: 'error.main' }}>{errors.nombre.message}</FormHelperText>}
                             {error422.nombre && <FormHelperText sx={{ color: 'error.main' }}>{error422.nombre.msg}</FormHelperText>}
-                        </FormControl>               
+                        </FormControl>    
+                        <FormControl fullWidth sx={{ mb: 2 }}>
+                            <Controller
+                                name='cedula'
+                                control={control}
+                                render={({ field: { value, onChange } }) => (
+                                    <TextField
+                                        value={value}
+                                        label='Cedula'
+                                        onChange={onChange}
+                                        error={Boolean(errors.cedula)}
+                                    />
+                                )}
+                            />
+                            {errors.cedula && <FormHelperText sx={{ color: 'error.main' }}>{errors.cedula.message}</FormHelperText>}
+                            {error422.cedula && <FormHelperText sx={{ color: 'error.main' }}>{error422.cedula.msg}</FormHelperText>}
+
+                        </FormControl>           
                         <FormControl fullWidth sx={{ mb: 2 }}>
                             <Controller
                                 name='telefono'
@@ -141,37 +162,35 @@ const CustomerAddEditDialog = ({ open, loading, onSubmit, onClose, current }: IP
                             {error422.direccion && <FormHelperText sx={{ color: 'error.main' }}>{error422.direccion.msg}</FormHelperText>}
                         </FormControl>
                         <FormControl fullWidth sx={{ mb: 2 }}>
+                            <InputLabel htmlFor="tipo-cliente-select">Tipo Cliente</InputLabel>
                             <Controller
-                                name='longitud'
+                                name='tipoCliente'
                                 control={control}
                                 render={({ field: { value, onChange } }) => (
-                                    <TextField
+                                    <Select
                                         value={value}
-                                        label='Longitud'
+                                        label='Tipo Cliente'
                                         onChange={onChange}
-                                        error={Boolean(errors.longitud)}
-                                    />
+                                        inputProps={{
+                                            id: 'tipo-cliente-select',
+                                        }}
+                                    >
+                                        {loadingSelect ? (
+                                            <MenuItem disabled>Cargando...</MenuItem>
+                                        ) : (
+                                            tipoCliente.map((tipo, index) => (
+                                                <MenuItem key={index} value={tipo.id_tipo}>     
+                                                    {tipo.descripcion}
+                                                </MenuItem>
+                                            ))
+                                        )}
+                                        
+                                    </Select>
                                 )}
                             />
-                            {errors.longitud && <FormHelperText sx={{ color: 'error.main' }}>{errors.longitud.message}</FormHelperText>}
-                            {error422.longitud && <FormHelperText sx={{ color: 'error.main' }}>{error422.longitud.msg}</FormHelperText>}
+                         {errors.tipoCliente && <FormHelperText sx={{ color: 'error.main' }}>{errors.tipoCliente.message}</FormHelperText>}
                         </FormControl>
-                        <FormControl fullWidth sx={{ mb: 2 }}>
-                            <Controller
-                                name='latitud'
-                                control={control}
-                                render={({ field: { value, onChange } }) => (
-                                    <TextField
-                                        value={value}
-                                        label='latitud'
-                                        onChange={onChange}
-                                        error={Boolean(errors.latitud)}
-                                    />
-                                )}
-                            />
-                            {errors.latitud && <FormHelperText sx={{ color: 'error.main' }}>{errors.latitud.message}</FormHelperText>}
-                            {error422.latitud && <FormHelperText sx={{ color: 'error.main' }}>{error422.latitud.msg}</FormHelperText>}
-                        </FormControl>
+                       
                        
                     <Controller
                         name='id'
