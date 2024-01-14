@@ -15,7 +15,7 @@ const TableHeader = ({ onAdd,Search }: TableHeaderProps) => {
     <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' ,width:'100%'}}>
           <Box sx={{display: 'flex',width:'100%',justifyContent:'space-between',flexDirection:'row'}}>
-            {onAdd&&<Button sx={{ mb: 2 }} onClick={onAdd} variant='contained' startIcon={<AddIcon fontSize='small' />}>
+            {onAdd&&<Button variant="outlined" sx={{ mb: 2 }} onClick={onAdd} startIcon={<AddIcon fontSize='small' />}>
               Agregar
             </Button>}
             {Search}
