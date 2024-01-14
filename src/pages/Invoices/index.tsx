@@ -10,6 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteDialog from "../../components/DeleteDialog";
 import paginationNro from "../../config/paginationNro";
 import { useDispatch } from "react-redux";
+import { format } from 'date-fns';
 import { resetError422 } from "../../redux/error422Slice";
 export const Invoices = () => {
 // Llamado a Variables del redux
@@ -31,14 +32,13 @@ export const Invoices = () => {
         {
             flex: 0.25,
             field: 'id',
-            align:'center',
-            headerAlign:'center',
             headerName: 'ID'
         },
         {
             flex: 0.25,
             field: 'Fecha_emicion',
-            headerName: 'Fecha de Emicion'
+            headerName: 'Fecha de Emicion',
+            valueFormatter: (params) => format(new Date(params.value), 'dd/MM/yyyy')
         },
         {
             flex: 0.25,
