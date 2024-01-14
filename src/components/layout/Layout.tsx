@@ -150,7 +150,7 @@ const Layout = ({ children, sectionTitle ,Action,actionText}: IProps) => {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {MainMenuItems}
+            <MainMenuItems />
             <Divider sx={{ my: 1 }} />
           </List>
         </Drawer>

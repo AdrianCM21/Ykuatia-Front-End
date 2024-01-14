@@ -15,12 +15,16 @@ import { redirectTo } from '../../utils/redirecTo';
 
 
 export const SignIn=()=> {
-  const { handleSubmit, control } = useForm();
+  const defaultValues = {
+    email: '',
+    password: '',
+  }
+  const { handleSubmit, control } = useForm({defaultValues});
 
   const onSubmit:SubmitHandler<ILoginData> = async (formFields: ILoginData) => {
     
     try {
-        const response = await login(formFields)
+        // const response = await login(formFields)
         console.log(response)
         if(response.status===200){
           location.reload()
