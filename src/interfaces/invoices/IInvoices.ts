@@ -2,7 +2,7 @@
 export interface IInvoice {
     id?: number
     estado: string
-    fechaEmicion: string
+    Fecha_emicion: string
     monto: number
     cliente: JSON
     

@@ -3,9 +3,8 @@ import Layout from "../../components/layout/Layout"
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IInvoice } from "../../interfaces/invoices/IInvoices";
-import * as CustomerService from "../../services/Customers/CustomerService"
+import * as InvoiceService from "../../services/invoices/invoices.service"
 import { DataGrid, esES, GridRowParams, GridColDef, GridActionsCellItem } from '@mui/x-data-grid';
-import CustomerAddEditDialog from "./components/AddEditDialog";
 import TableHeader from "../../components/TableHeader";
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteDialog from "../../components/DeleteDialog";
@@ -38,7 +37,7 @@ export const Invoices = () => {
         },
         {
             flex: 0.25,
-            field: 'fechaEmicion',
+            field: 'Fecha_emicion',
             headerName: 'Fecha de Emicion'
         },
         {
@@ -55,7 +54,8 @@ export const Invoices = () => {
         {
             flex: 0.25,
             field: 'cliente',
-            headerName: 'Nombre del cliente'
+            headerName: 'Nombre del cliente',
+            valueGetter: (params) => params.row.cliente.nombre
         }
     ]
 
@@ -66,10 +66,8 @@ export const Invoices = () => {
     const getInvoices = async () => {
         setLoading(true)
         try {
-            const response = await CustomerService.getCustomers(page)
-
+            const response = await InvoiceService.getInvoices(page)
             setPageNro(Math.ceil((response.total/paginationNro.paginationNro)))
- 
             setInvoices(response.resultado)
         } catch (error) {
             toast.error('Error de listado')
