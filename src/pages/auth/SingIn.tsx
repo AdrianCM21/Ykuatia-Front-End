@@ -24,13 +24,11 @@ export const SignIn=()=> {
     
     try {
         const response = await login(formFields)
-        console.log(response)
         if((response as any).status===200){
           location.reload()
         }
         
     } catch (error) {
-      console.log("fawdsf")
       console.log(error)
     }
   };

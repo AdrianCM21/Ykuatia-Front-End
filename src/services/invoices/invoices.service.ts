@@ -10,7 +10,6 @@ export const getInvoices = async (page:number) => {
         const { data: response}: AxiosResponse<IInvoiceResponose> = await axios.get('/api/facturas',{params: {
             desde: paginationNro.paginationNro*(page-1)
            }})
-           console.log(response)
         return response
     } catch (error) {
         return Promise.reject(error)
@@ -22,7 +21,6 @@ export const downloadInvoice = async (id:number):Promise<void> => {
             return status < 400 || status === 404;
         }});
         if (status !== 404) {
-            console.log('si tiene factura')
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;

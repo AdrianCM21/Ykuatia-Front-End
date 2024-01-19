@@ -6,7 +6,6 @@ const login = async (data:ILoginData) => {
   try {
     const response: AxiosResponse = await axios.post('/api/login', data);
       toast.success('Inicio de sesión correcta');
-      console.log(response)
       localStorage.setItem('x-token', response.data.token);
     return response;
   } catch (error:any) {

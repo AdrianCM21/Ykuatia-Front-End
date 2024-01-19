@@ -133,7 +133,6 @@ const Customer = () => {
 
             toast.success('Cliente actualizado correctamente');
           } else {
-            console.log(formFields)
             const response = await CustomerService.addCliente(formFields)
             
             setCustomers([response, ...customers])
