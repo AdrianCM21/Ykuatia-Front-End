@@ -35,7 +35,7 @@ const CustomerAddEditDialog = ({ open, loading, onSubmit, onClose, current }: IP
     console.log(defaultValues)
     //Obtencion de datos de tipo cliente para el select
     const [tipoCliente, setTipoCliente] = useState<ICustomertypes[]>([]);
-    const [loadingSelect,setLoadingSelect] = useState<Boolean>(true)
+    const [loadingSelect,setLoadingSelect] = useState<boolean>(true)
     useEffect(() => {
       
     getTiposSelect()

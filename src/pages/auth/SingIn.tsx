@@ -8,10 +8,9 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import ILoginData from '../../interfaces/auth/ILoginData';
-import { login } from '../../services/auth/auth';
-import {useNavigate} from 'react-router';
+
 import { ToastContainer } from 'react-toastify';
-import { redirectTo } from '../../utils/redirecTo';
+import { login } from '../../services/auth/auth';
 
 
 export const SignIn=()=> {
@@ -24,9 +23,9 @@ export const SignIn=()=> {
   const onSubmit:SubmitHandler<ILoginData> = async (formFields: ILoginData) => {
     
     try {
-        // const response = await login(formFields)
+        const response = await login(formFields)
         console.log(response)
-        if(response.status===200){
+        if((response as any).status===200){
           location.reload()
         }
         

@@ -1,4 +1,3 @@
-import ICustomertypes from "./CustomersTypes"
 
 export default interface ICustomer {
     id?: number

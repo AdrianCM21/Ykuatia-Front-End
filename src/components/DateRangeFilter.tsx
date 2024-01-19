@@ -43,15 +43,16 @@ export const DateRangeFilter: React.FC<DateRangeFilterProps> = ({ dateRange, set
             <Button variant="outlined" onClick={handleOpen}>
                 Filtrar por fecha
             </Button>
-            <Dialog open={open} onClose={handleClose}>
+            <Dialog open={open} onClose={handleClose} maxWidth='lg'>
                 <DialogTitle>Filtrar por fecha</DialogTitle>
                 <DialogContent>
                     <DateRangePicker
                         ranges={dateRange}
                         onChange={(item:any) => setDateRange([{ startDate: item.selection.startDate, endDate: item.selection.endDate, key: 'selection' }])}
                         locale={es}
-                        rangeColors={['#3d91ff']}
+                        rangeColors={['#14539a']}
                         staticRanges={staticRanges}
+                        
                     />
                 </DialogContent>
             </Dialog>

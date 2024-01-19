@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IInvoice } from "../../interfaces/invoices/IInvoices";
 import * as InvoiceService from "../../services/invoices/invoices.service"
-import { DataGrid, esES,GridColDef, GridRowsProp } from '@mui/x-data-grid';
+import { DataGrid, esES,GridColDef, GridRowsProp, GridSortModel } from '@mui/x-data-grid';
 import TableHeader from "../../components/TableHeader";
 import paginationNro from "../../config/paginationNro";
 import { useDispatch } from "react-redux";
@@ -12,6 +12,7 @@ import { format, startOfMonth } from 'date-fns';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangeFilter } from "../../components/DateRangeFilter";
+import { FormularioDescarga } from "../../components/FormularioDescarga";
 
 export const Invoices = () => {
 // Llamado a Variables del redux
@@ -24,6 +25,12 @@ export const Invoices = () => {
   const [page, setPage] = useState<number>(1)
   const [pageNro, setPageNro] = useState<number>(0)
   const [refres,setRefres] = useState<number>(1)
+  
+
+  //Variables para descarga
+    const [downloadLoading, setDownloadLoading] = useState(false);
+    const [openDescarga, setOpenDescarga] = useState(false);
+
     
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -40,13 +47,22 @@ export const Invoices = () => {
             field: 'Fecha_emicion',
             headerName: 'Fecha de Emicion',
             type: 'date',
-            valueFormatter: (params) => format(new Date(params.value), 'dd/MM/yyyy'),
+            valueFormatter: (params) => format(new Date(params.value), 'MM/yyyy'),
             filterable:true
         },
         {
             flex: 0.25,
             field: 'estado',
-            headerName: 'Estado'
+            headerName: 'Estado',
+            sortComparator: (v1, v2, cellParams1, cellParams2) => {
+                if (cellParams1.value === 'pendiente' && cellParams2.value !== 'pendiente') {
+                    return -1;
+                } else if (cellParams1.value !== 'pendiente' && cellParams2.value === 'pendiente') {
+                    return 1;
+                } else {
+                    return cellParams1.value.localeCompare(cellParams2.value);
+                }
+            }
         },
       
         {
@@ -61,6 +77,13 @@ export const Invoices = () => {
             valueGetter: (params) => params.row.cliente.nombre
         }
     ]
+
+    const sortModel: GridSortModel = [
+        {
+            field: 'estado',
+            sort: 'asc',
+        },
+    ];
 
     useEffect(() => {
         getInvoices()
@@ -104,6 +127,23 @@ const filteredRows: GridRowsProp = rows.filter((row) => {
     return (!dateRange[0].startDate || date >= dateRange[0].startDate) && (!dateRange[0].endDate || date <= dateRange[0].endDate);
 });
 
+//Funciones de descarga 
+
+const handleDownloadSubmit = async()=>{
+    setDownloadLoading(true);
+    try {
+      await InvoiceService.downloadInvoices()
+    } catch (error) {
+      toast.error('Error en la descarga')
+    }
+    setDownloadLoading(false);
+    setOpenDescarga(false);
+  };
+
+const handleOpen = () => {
+    setOpenDescarga(true);
+};
+
 
 return (
     <Layout
@@ -113,7 +153,16 @@ return (
             <Grid container spacing={3}>
                 <Grid item lg={12}>
                     <TableHeader/>
-                    <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange}/>
+                    <Box display="flex" justifyContent="space-between">
+                        <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange}/>
+                        <Box>
+                            <Button variant="contained" color="primary" onClick={handleOpen}>
+                                Abrir formulario de descarga
+                            </Button>
+                        </Box>
+                       
+                    </Box>
+                    
                     <Box sx={{ height: 400 }}>
                         <DataGrid
                             columns={columns} 
@@ -122,6 +171,7 @@ return (
                             disableColumnMenu={true}
                             loading={loading}
                             hideFooter={true}
+                            sortModel={sortModel}
                         />
                     </Box>
                     <Box sx={{borderTop:'1px solid rgba(224, 224, 224, 1);',display:'flex',justifyContent:'center',alignItems:'center'}}>
@@ -129,6 +179,15 @@ return (
                     </Box>
                 </Grid>
             </Grid>
+            {openDescarga &&
+                <FormularioDescarga
+                   open={openDescarga}
+                    loading={downloadLoading}
+                    onConfirm={handleDownloadSubmit}
+                    onClose={() => setOpenDescarga(false)}
+
+                />
+            }
         </>
     </Layout>    
 )

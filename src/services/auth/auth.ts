@@ -9,8 +9,7 @@ const login = async (data:ILoginData) => {
       console.log(response)
       localStorage.setItem('x-token', response.data.token);
     return response;
-  } catch (error) {
-    //@ts-ignore
+  } catch (error:any) {
     if (error.response && error.response.status === 401) {
       toast.error('No estás autorizado para acceder a esta página');
       return error

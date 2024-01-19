@@ -1,4 +1,4 @@
-import { Box, Grid, Pagination } from "@mui/material"
+import { Box, Button, Grid, Pagination } from "@mui/material"
 import Layout from "../../components/layout/Layout"
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -11,7 +11,11 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteDialog from "../../components/DeleteDialog";
 import paginationNro from "../../config/paginationNro";
 import { useDispatch } from "react-redux";
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+
 import { resetError422 } from "../../redux/error422Slice";
+import { FormularioDescarga } from "../../components/FormularioDescarga";
+import { downloadInvoice, downloadInvoices } from "../../services/invoices/invoices.service";
 const Customer = () => {
 // Llamado a Variables del redux
     const dispatch =useDispatch()
@@ -31,6 +35,12 @@ const Customer = () => {
   const [page, setPage] = useState<number>(1)
   const [pageNro, setPageNro] = useState<number>(0)
   const [refres,setRefres] = useState<number>(1)
+
+   //Variables para descarga
+   const [downloadLoading, setDownloadLoading] = useState(false);
+   const [openDescarga, setOpenDescarga] = useState(false);
+
+   
     
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -81,7 +91,15 @@ const Customer = () => {
                     setCurrent(params.row)
                     setOpenDeleteDialog(true)
                 }}
-              />
+              />, <GridActionsCellItem
+              icon={<CloudDownloadIcon/>}
+              label="Descargar"
+              onClick={() => {
+
+                    setCurrent(params.row)
+                    setOpenDescarga(true)
+              }}
+            />
             ],
           },
     ]
@@ -122,8 +140,8 @@ const Customer = () => {
             
             toast.success('Cliente agregado correctamente')
           }
-        } catch (error) {
-            //@ts-ignore
+        } catch (error: any) {
+            
             if(error.response.status==422){
                 setAddEditLoading(false)
                 return
@@ -137,7 +155,7 @@ const Customer = () => {
     }
 
     const handleRowClick = (row: GridRowParams<ICustomer>) => {
-        //@ts-ignore
+//@ts-ignore
         if(row.row.tipoCliente && row.row.tipoCliente.id_tipo){
             //@ts-ignore
             setCurrent({...row.row,tipoCliente:row.row.tipoCliente.id_tipo})
@@ -172,6 +190,26 @@ const Customer = () => {
         setOpenDeleteDialog(false)
     }
     
+
+    //Funciones de descarga 
+
+const handleDownloadSubmit = async()=>{
+    setDownloadLoading(true);
+    try {
+    if(current?.id){
+        await downloadInvoice(current.id)
+    }else{
+        await downloadInvoices()
+    }
+    } catch (error) {
+      toast.error('Error en la descarga')
+    }
+    setCurrent(undefined)
+    setDownloadLoading(false);
+    setOpenDescarga(false);
+  };
+
+
     return (
         <Layout
             sectionTitle="CLIENTES"
@@ -179,7 +217,15 @@ const Customer = () => {
             <>
                 <Grid container spacing={3}>
                     <Grid item lg={12}>
+                    <Box display="flex" justifyContent="space-between">
                         <TableHeader onAdd={() => setOpenAddEditDialog(true)}/>
+                        <Box>
+                            <Button variant="contained" color="primary" onClick={()=>{setOpenDescarga(true)}}>
+                                Abrir formulario de descarga
+                            </Button>
+                        </Box>
+
+                    </Box>
                         <Box sx={{ height: 400 }}>
                             <DataGrid
                                 columns={columns} 
@@ -211,6 +257,15 @@ const Customer = () => {
                         loading={deleteLoading}
                         onConfirm={handleDeleteSubmit}
                         onClose={handleDeleteDialogOnClose}
+                    />
+                }
+                {openDescarga &&
+                    <FormularioDescarga
+                       open={openDescarga}
+                        loading={downloadLoading}
+                        onConfirm={handleDownloadSubmit}
+                        onClose={() => setOpenDescarga(false)}
+                        oneCustomer={current?.id}
                     />
                 }
             </>

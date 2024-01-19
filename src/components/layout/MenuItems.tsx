@@ -6,7 +6,8 @@ import BusinessIcon from "@mui/icons-material/Business";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import VerifiedUserIcon from "@mui/icons-material/VerifiedUser";
+import BarChartIcon from "@mui/icons-material/BarChart";
+
 import HomeIcon from "@mui/icons-material/Home";
 import GroupIcon from "@mui/icons-material/Group";
 import PersonIcon from "@mui/icons-material/Person";
@@ -63,6 +64,20 @@ export const MainMenuItems = () => {
             <GroupIcon />
             </ListItemIcon>
             <ListItemText>Usuarios</ListItemText>
+          </ListItemButton>
+        </CustomListItemButton>
+      </RouterLink>
+
+      <RouterLink
+        to="/estadisticas"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <CustomListItemButton selected={location.pathname === "/estadisticas"}>
+          <ListItemButton >
+            <ListItemIcon>
+              <BarChartIcon />
+            </ListItemIcon>
+            <ListItemText>Estadísticas</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
       </RouterLink>
