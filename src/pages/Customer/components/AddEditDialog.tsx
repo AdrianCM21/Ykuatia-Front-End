@@ -1,5 +1,5 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, dividerClasses, FormControl, FormHelperText, Grid, IconButton, TextField, Select, MenuItem,InputLabel, } from "@mui/material"
-import { useEffect, useState ,useRef} from "react";
+import {  Button, Dialog, DialogActions, DialogContent, DialogTitle,  FormControl, FormHelperText, IconButton, TextField, Select, MenuItem,InputLabel, } from "@mui/material"
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import ICustomer from "../../../interfaces/customers/Customer";
 import schema from "../../../schemas/Customer";
@@ -9,7 +9,6 @@ import { LoadingButton } from "@mui/lab";
 import {  useSelector } from "react-redux";
 import IResponseErrorCustomer from "../../../interfaces/customers/ResponsErrorCustomers";
 import FormHeader from "../../../components/FormHeader";
-import { datosUbicacion } from "../../../static/datosUbicacion";
 import { getTipoCliente } from "../../../services/Customers/CustomerService";
 import ICustomertypes from "../../../interfaces/customers/CustomersTypes";
 
@@ -55,12 +54,8 @@ const CustomerAddEditDialog = ({ open, loading, onSubmit, onClose, current }: IP
     const error422:IResponseErrorCustomer=useSelector((state)=>state.error422)
     const {
         reset,
-        resetField,
         control,
-        setValue,
-        getValues,
         handleSubmit,
-        watch,
         formState: { errors }
     } = useForm({
         defaultValues,
@@ -195,7 +190,7 @@ const CustomerAddEditDialog = ({ open, loading, onSubmit, onClose, current }: IP
                     <Controller
                         name='id'
                         control={control}
-                        render={({ field: { value, onChange } }) => (
+                        render={({ field: { value} }) => (
                             <input type={"hidden"} value={value}/>
                         )}
                     />

@@ -50,6 +50,7 @@ const addCliente = async (data: ICustomer) => {
 
 const updateCliente = async (data: ICustomer) => {
     const { id } = data
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { id: _, ...values } = data
 
     try {

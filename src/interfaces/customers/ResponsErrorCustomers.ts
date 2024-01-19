@@ -1,4 +1,3 @@
-import ICustomer from "./Customer";
 
 interface IResponseError{
    msg:string

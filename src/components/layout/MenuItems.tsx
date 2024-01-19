@@ -1,8 +1,6 @@
 import * as React from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
-import { useState } from "react";
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import BusinessIcon from "@mui/icons-material/Business";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -10,10 +8,6 @@ import BarChartIcon from "@mui/icons-material/BarChart";
 
 import HomeIcon from "@mui/icons-material/Home";
 import GroupIcon from "@mui/icons-material/Group";
-import PersonIcon from "@mui/icons-material/Person";
-import InventoryIcon from "@mui/icons-material/Inventory";
-import KeyboardArrowRight from "@mui/icons-material/KeyboardArrowRight";
-
 import { styled } from "@mui/system";
 import { Typography } from "@mui/material";
 
@@ -24,7 +18,7 @@ const CustomListItemButton = styled(ListItemButton)(({ theme, selected }) => ({
 }));
 
 export const MainMenuItems = () => {
-  const [showFacturaOptions, setShowFacturaOptions] = useState(false);
+  // const [showFacturaOptions, setShowFacturaOptions] = useState(false);
   const location = useLocation();
 
   return (

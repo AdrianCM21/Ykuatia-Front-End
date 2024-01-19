@@ -15,7 +15,7 @@ export const error422Slice = createSlice({
             state[element.param]=element
            });
         },
-        resetError422:(state,action)=>{
+        resetError422:()=>{
             return(initialState)
         }
     }

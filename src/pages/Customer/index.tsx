@@ -10,15 +10,15 @@ import TableHeader from "../../components/TableHeader";
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteDialog from "../../components/DeleteDialog";
 import paginationNro from "../../config/paginationNro";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 
-import { resetError422 } from "../../redux/error422Slice";
+// import { resetError422 } from "../../redux/error422Slice";
 import { FormularioDescarga } from "../../components/FormularioDescarga";
 import { downloadInvoice, downloadInvoices } from "../../services/invoices/invoices.service";
 const Customer = () => {
 // Llamado a Variables del redux
-    const dispatch =useDispatch()
+    // const dispatch =useDispatch()
 //Inicializacion de estados
     const [loading, setLoading] = useState(false)
     const [customers, setCustomers] = useState<ICustomer[]>([])
@@ -84,14 +84,14 @@ const Customer = () => {
             headerName: 'Acciones',
             type: 'actions',
             getActions: (params) => [
-              <GridActionsCellItem
+              <GridActionsCellItem key={params.row.id}
                 icon={<DeleteIcon />}
                 label="Delete"
                 onClick={() => {
                     setCurrent(params.row)
                     setOpenDeleteDialog(true)
                 }}
-              />, <GridActionsCellItem
+              />, <GridActionsCellItem key={params.row.id}
               icon={<CloudDownloadIcon/>}
               label="Descargar"
               onClick={() => {
@@ -128,7 +128,7 @@ const Customer = () => {
         try {
             
           if (current) {
-            const response = await CustomerService.updateCliente(formFields)
+            await CustomerService.updateCliente(formFields)
             setRefres(refres?0:1)
 
             toast.success('Cliente actualizado correctamente');
@@ -174,7 +174,7 @@ const Customer = () => {
     const handleDeleteSubmit = async () => {
         setDeleteLoading(true);
         try {
-            const response = await CustomerService.deleteCliente(String(current?.id))
+            await CustomerService.deleteCliente(String(current?.id))
             setCustomers(customers.filter(customer => customer.id != current?.id))
             toast.success('Eliminado correctamente');
         } catch (error) {

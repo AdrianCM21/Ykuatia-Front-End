@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, Pagination, TextField } from "@mui/material"
+import { Box, Button, Grid, Pagination } from "@mui/material"
 import Layout from "../../components/layout/Layout"
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -7,7 +7,7 @@ import * as InvoiceService from "../../services/invoices/invoices.service"
 import { DataGrid, esES,GridColDef, GridRowsProp, GridSortModel } from '@mui/x-data-grid';
 import TableHeader from "../../components/TableHeader";
 import paginationNro from "../../config/paginationNro";
-import { useDispatch } from "react-redux";
+// import { useDispatch } from "react-redux";
 import { format, startOfMonth } from 'date-fns';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -16,7 +16,7 @@ import { FormularioDescarga } from "../../components/FormularioDescarga";
 
 export const Invoices = () => {
 // Llamado a Variables del redux
-    const dispatch =useDispatch()
+    // const dispatch =useDispatch()
 //Inicializacion de estados
     const [loading, setLoading] = useState(false)
     const [invoices, setInvoices] = useState<IInvoice[]>([])
@@ -24,6 +24,7 @@ export const Invoices = () => {
     // Variables para paginacion
   const [page, setPage] = useState<number>(1)
   const [pageNro, setPageNro] = useState<number>(0)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [refres,setRefres] = useState<number>(1)
   
 

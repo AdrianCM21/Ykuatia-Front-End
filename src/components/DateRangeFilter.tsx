@@ -5,7 +5,7 @@ import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { useState } from 'react';
 import { es } from 'date-fns/locale';
-import { endOfMonth, endOfYear, isWithinInterval, startOfMonth, startOfYear, subMonths, subYears } from 'date-fns';
+import { endOfMonth, endOfYear, startOfMonth, startOfYear, subMonths, subYears } from 'date-fns';
 
 interface DateRangeFilterProps {
     dateRange: { startDate: Date, endDate: Date, key: string }[],
