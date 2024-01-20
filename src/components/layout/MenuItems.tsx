@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link as RouterLink, useLocation } from "react-router-dom";
+import {  Link as RouterLink, useLocation } from "react-router-dom";
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -10,6 +10,9 @@ import HomeIcon from "@mui/icons-material/Home";
 import GroupIcon from "@mui/icons-material/Group";
 import { styled } from "@mui/system";
 import { Typography } from "@mui/material";
+import Badge from "@mui/material/Badge";
+import { checkInvoices } from "../../services/invoices/invoices.service";
+
 
 const CustomListItemButton = styled(ListItemButton)(({ theme, selected }) => ({
   color: selected ? theme.palette.primary.main : theme.palette.text.primary,
@@ -20,6 +23,18 @@ const CustomListItemButton = styled(ListItemButton)(({ theme, selected }) => ({
 export const MainMenuItems = () => {
   // const [showFacturaOptions, setShowFacturaOptions] = useState(false);
   const location = useLocation();
+  const [hasNotification, setHasNotification] = React.useState(false);
+  
+  React.useEffect( () => {
+   checkNotificaniones()
+  }, [location.pathname])
+
+  const checkNotificaniones= async()=>{
+    const result = await checkInvoices()
+    setHasNotification(result)
+  }
+
+  
 
   return (
     <React.Fragment>
@@ -54,11 +69,13 @@ export const MainMenuItems = () => {
         style={{ textDecoration: "none", color: "inherit" }}
       >
         <CustomListItemButton selected={location.pathname === "/facturas"}>
-          <ListItemButton >
-            <ListItemIcon>
-            <AssignmentIcon />
+          <ListItemButton>
+            <ListItemIcon style={{ width: '24px', height: '24px' }}>
+              <Badge color="error" variant="dot" invisible={!hasNotification}>
+                <AssignmentIcon />
+              </Badge>
             </ListItemIcon>
-            <ListItemText>facturas</ListItemText>
+            <ListItemText>Facturas</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
       </RouterLink>

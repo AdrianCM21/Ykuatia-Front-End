@@ -10,6 +10,6 @@ export default interface ICustomer {
     direccion: string
     telefono:string
     tipoCliente: string
-    auditoria:IAuditoria
+    auditoria?:IAuditoria
     
 }

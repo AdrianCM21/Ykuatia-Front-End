@@ -5,3 +5,7 @@ export interface IInvoiceResponose {
     total: number
 
 }
+
+export interface IInvoiceCargaConsumoResponse {
+    message:IInvoice
+}

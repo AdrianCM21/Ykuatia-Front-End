@@ -1,7 +1,7 @@
 import axios from "../../config/axios";
 import { AxiosResponse } from "axios";
 import paginationNro from "../../config/paginationNro";
-import { IInvoiceResponose } from "../../interfaces/invoices/IIncoiceResponse";
+import { IInvoiceCargaConsumoResponse, IInvoiceResponose } from "../../interfaces/invoices/IIncoiceResponse";
 import { toast } from "react-toastify";
 
 
@@ -45,6 +45,32 @@ export const downloadInvoices = async ():Promise<void> => {
         link.download = 'facturas';
         link.click();
       
+    } catch (error) {
+        console.log(error)
+        return Promise.reject(error)
+    }
+}
+
+export const checkInvoices = async ():Promise<boolean> => {
+    try {
+        const { data: response }: AxiosResponse<IInvoiceResponose> = await axios.get('/api/facturas',{params: {desde:0}});
+        const hasRejectedInvoice = response.resultado.some(invoice => invoice.estado === 'pendiente a carga de consumo');
+
+        return hasRejectedInvoice;
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
+
+export const envioConsumo = async (id:number,consumo:number):Promise<IInvoiceCargaConsumoResponse> => {
+    try {
+        const response: AxiosResponse<IInvoiceCargaConsumoResponse> = await axios.post(`/api/facturas/${id}`,{consumo})
+        console.log(response)
+        if (response.status !== 200) {
+            toast.error('Error al enviar el consumo')
+        }
+        toast.success('Consumo enviado')
+        return response.data
     } catch (error) {
         console.log(error)
         return Promise.reject(error)

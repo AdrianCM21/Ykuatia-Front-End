@@ -1,10 +1,10 @@
-import { Box, Button, Grid, Pagination } from "@mui/material"
+import { Badge, Box, Button, Grid, Pagination } from "@mui/material"
 import Layout from "../../components/layout/Layout"
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { IInvoice } from "../../interfaces/invoices/IInvoices";
 import * as InvoiceService from "../../services/invoices/invoices.service"
-import { DataGrid, esES,GridColDef, GridRowsProp, GridSortModel } from '@mui/x-data-grid';
+import { DataGrid, esES,GridColDef, GridRowsProp, GridSortModel, GridValueGetterParams } from '@mui/x-data-grid';
 import TableHeader from "../../components/TableHeader";
 import paginationNro from "../../config/paginationNro";
 
@@ -13,13 +13,15 @@ import { format, startOfMonth } from 'date-fns';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangeFilter } from "../../components/DateRangeFilter";
-import { FormularioDescarga } from "../../components/FormularioDescarga";
+import { CompletadoConsumo } from "./components/completadoConsumo";
 export const Invoices = () => {
 // Llamado a Variables del redux
     // const dispatch =useDispatch()
 //Inicializacion de estados
     const [loading, setLoading] = useState(false)
     const [invoices, setInvoices] = useState<IInvoice[]>([])
+    const [hasNotification, setHasNotification] = useState(false);
+  
     
     // Variables para paginacion
   const [page, setPage] = useState<number>(1)
@@ -29,8 +31,7 @@ export const Invoices = () => {
   
 
   //Variables para descarga
-    const [downloadLoading, setDownloadLoading] = useState(false);
-    const [openDescarga, setOpenDescarga] = useState(false);
+    const [openCompletadoConsumo, setOpenCompletadoConsumo] = useState(false);
 
 
 
@@ -59,9 +60,9 @@ export const Invoices = () => {
             field: 'estado',
             headerName: 'Estado',
             sortComparator: (v1, v2, cellParams1, cellParams2) => {
-                if (cellParams1.value === 'pendiente' && cellParams2.value !== 'pendiente') {
+                if (cellParams1.value === 'pendiente a pago' && cellParams2.value !== 'pendiente a pago') {
                     return -1;
-                } else if (cellParams1.value !== 'pendiente' && cellParams2.value === 'pendiente') {
+                } else if (cellParams1.value !== 'pendiente a pago' && cellParams2.value === 'pendiente a pago') {
                     return 1;
                 } else {
                     return cellParams1.value.localeCompare(cellParams2.value);
@@ -72,7 +73,10 @@ export const Invoices = () => {
         {
             flex: 0.25,
             field: 'monto',
-            headerName: 'Monto a pagar'
+            headerName: 'Monto a pagar',
+            valueGetter: (params: GridValueGetterParams) => (
+                `${params.value} Gs`
+            ),
         },
         {
             flex: 0.25,
@@ -91,8 +95,14 @@ export const Invoices = () => {
 
     useEffect(() => {
         getInvoices()
+        checkNotificaniones()
+        
     }, [page,refres])
-
+    const checkNotificaniones= async()=>{
+        const result = await InvoiceService.checkInvoices()
+        setHasNotification(result)
+      }
+    
     const getInvoices = async () => {
         setLoading(true)
         try {
@@ -133,19 +143,8 @@ const filteredRows: GridRowsProp = rows.filter((row) => {
 
 //Funciones de descarga 
 
-const handleDownloadSubmit = async()=>{
-    setDownloadLoading(true);
-    try {
-      await InvoiceService.downloadInvoices()
-    } catch (error) {
-      toast.error('Error en la descarga')
-    }
-    setDownloadLoading(false);
-    setOpenDescarga(false);
-  };
-
 const handleOpen = () => {
-    setOpenDescarga(true);
+    setOpenCompletadoConsumo(true);
 };
 
 
@@ -160,9 +159,16 @@ return (
                     <Box display="flex" justifyContent="space-between">
                         <DateRangeFilter dateRange={dateRange} setDateRange={setDateRange}/>
                         <Box>
+                        <Badge color="error"  
+                            anchorOrigin={{
+                                vertical: 'top',
+                                horizontal: 'left',
+                            }} 
+                            variant="dot" invisible={!hasNotification}>
                             <Button variant="contained" color="primary" onClick={handleOpen}>
-                                Abrir formulario de descarga
+                                Completa consumo factura
                             </Button>
+                        </Badge>
                         </Box>
                        
                     </Box>
@@ -183,16 +189,18 @@ return (
                     </Box>
                 </Grid>
             </Grid>
-            {openDescarga &&
-                <FormularioDescarga
-                   open={openDescarga}
-                    loading={downloadLoading}
-                    onConfirm={handleDownloadSubmit}
-                    onClose={() => setOpenDescarga(false)}
+            {openCompletadoConsumo &&
+                <CompletadoConsumo
+                   open={openCompletadoConsumo}
+                    onClose={() => {
+                        setOpenCompletadoConsumo(false)
+                        setRefres(refres?0:1)
+                    }}
+                    data={invoices.filter((invoice) => invoice.estado === 'pendiente a carga de consumo')}
 
                 />
             }
-        </>
+        </> 
     </Layout>    
 )
 }
