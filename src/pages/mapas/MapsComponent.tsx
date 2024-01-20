@@ -22,6 +22,7 @@ export const MapComponent = () => {
             <ChangeView center={initialPosition} zoom={13} />
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                //@ts-ignore
                 attribution='&amp;copy AdrianCM'
 
             />

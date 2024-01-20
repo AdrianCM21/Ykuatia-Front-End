@@ -35,19 +35,7 @@ export const MainMenuItems = () => {
           </ListItemButton>
         </CustomListItemButton>
       </RouterLink>
-      <RouterLink
-        to="/facturas"
-        style={{ textDecoration: "none", color: "inherit" }}
-      >
-        <CustomListItemButton selected={location.pathname === "/facturas"}>
-          <ListItemButton >
-            <ListItemIcon>
-            <AssignmentIcon />
-            </ListItemIcon>
-            <ListItemText>facturas</ListItemText>
-          </ListItemButton>
-        </CustomListItemButton>
-      </RouterLink>
+      
       <RouterLink
         to="/clientes"
         style={{ textDecoration: "none", color: "inherit" }}
@@ -58,6 +46,19 @@ export const MainMenuItems = () => {
             <GroupIcon />
             </ListItemIcon>
             <ListItemText>Usuarios</ListItemText>
+          </ListItemButton>
+        </CustomListItemButton>
+      </RouterLink>
+      <RouterLink
+        to="/facturas"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <CustomListItemButton selected={location.pathname === "/facturas"}>
+          <ListItemButton >
+            <ListItemIcon>
+            <AssignmentIcon />
+            </ListItemIcon>
+            <ListItemText>facturas</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
       </RouterLink>

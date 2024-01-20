@@ -1,9 +1,9 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Home from "../pages/Home";
-import Customer from "../pages/Customer";
+import Customer from "../pages/Customer/Customer.page";
 import { SignIn } from "../pages/auth/SingIn";
 import { isAuthenticated } from "../services/auth/auth";
-import { Invoices } from "../pages/Invoices";
+import { Invoices } from "../pages/Invoices/Invoices.page";
 import { MapsMainScreen } from "../pages/mapas/MapsMainScreen";
 
 

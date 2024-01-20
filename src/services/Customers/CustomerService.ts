@@ -2,13 +2,14 @@ import axios from "../../config/axios";
 import { AxiosResponse } from "axios";
 import ICustomer from "../../interfaces/customers/Customer";
 import paginationNro from "../../config/paginationNro";
-import IResponseCustomer from "../../interfaces/customers/Customer";
+
 import ICustomertypes from "../../interfaces/customers/CustomersTypes";
+import { ICustomerResponose } from "../../interfaces/customers/CustomesResponse";
 
 
 const getCustomers = async (page:number) => {
     try {
-        const { data: response}: AxiosResponse<IResponseCustomer> = await axios.get('/api/cliente',{params: {
+        const { data: response}: AxiosResponse<ICustomerResponose> = await axios.get('/api/cliente',{params: {
             desde: paginationNro.paginationNro*(page-1)
            }})
            console.log(response)

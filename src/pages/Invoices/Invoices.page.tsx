@@ -7,13 +7,13 @@ import * as InvoiceService from "../../services/invoices/invoices.service"
 import { DataGrid, esES,GridColDef, GridRowsProp, GridSortModel } from '@mui/x-data-grid';
 import TableHeader from "../../components/TableHeader";
 import paginationNro from "../../config/paginationNro";
+
 // import { useDispatch } from "react-redux";
 import { format, startOfMonth } from 'date-fns';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 import { DateRangeFilter } from "../../components/DateRangeFilter";
 import { FormularioDescarga } from "../../components/FormularioDescarga";
-
 export const Invoices = () => {
 // Llamado a Variables del redux
     // const dispatch =useDispatch()
@@ -31,6 +31,9 @@ export const Invoices = () => {
   //Variables para descarga
     const [downloadLoading, setDownloadLoading] = useState(false);
     const [openDescarga, setOpenDescarga] = useState(false);
+
+
+
 
     
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
@@ -102,7 +105,7 @@ export const Invoices = () => {
         setLoading(false)
     }
 
-  
+
 //Prueba filtro date 
 
 const [dateRange, setDateRange] = useState([

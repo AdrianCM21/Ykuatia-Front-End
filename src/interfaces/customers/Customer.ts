@@ -1,3 +1,7 @@
+export interface IAuditoria {
+    id:number
+    historial_cambios:string
+}
 
 export default interface ICustomer {
     id?: number
@@ -6,5 +10,6 @@ export default interface ICustomer {
     direccion: string
     telefono:string
     tipoCliente: string
+    auditoria:IAuditoria
     
 }

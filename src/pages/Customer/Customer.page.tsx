@@ -1,5 +1,7 @@
-import { Box, Button, Grid, Pagination } from "@mui/material"
+import { Box, Button, Grid, Pagination} from "@mui/material"
 import Layout from "../../components/layout/Layout"
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ICustomer from "../../interfaces/customers/Customer";
@@ -16,6 +18,7 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 // import { resetError422 } from "../../redux/error422Slice";
 import { FormularioDescarga } from "../../components/FormularioDescarga";
 import { downloadInvoice, downloadInvoices } from "../../services/invoices/invoices.service";
+import { ViewAuditoria } from "../../components/auditoria/ViewAuditoria";
 const Customer = () => {
 // Llamado a Variables del redux
     // const dispatch =useDispatch()
@@ -40,7 +43,14 @@ const Customer = () => {
    const [downloadLoading, setDownloadLoading] = useState(false);
    const [openDescarga, setOpenDescarga] = useState(false);
 
-   
+   //Variables auditoria 
+
+   const [openAuditoria, setOpenAuditoria] = useState<boolean>(false);
+   const [auditoriaData, setAuditoriaData] = useState<string[]>([]);
+   useState<string[]>([]);
+ 
+
+
     
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -48,7 +58,7 @@ const Customer = () => {
 
     const columns: GridColDef[] = [
         {
-            flex: 0.25,
+            flex: 0.10,
             field: 'id',
             headerName: 'ID'
         },
@@ -70,19 +80,17 @@ const Customer = () => {
         },
         {
             flex: 0.25,
-            field: 'direccion',
-            headerName: 'Direccion'
-        },
-        {
-            flex: 0.25,
             field: 'tipoCliente',
             headerName: 'Tipo Cliente',
             valueGetter: (params) => params.row.tipoCliente ? params.row.tipoCliente.descripcion : ''
         },
         {
+            flex: 0.25,
             field: 'actions',
             headerName: 'Acciones',
             type: 'actions',
+            align: 'center',
+            headerAlign: 'center',
             getActions: (params) => [
               <GridActionsCellItem key={params.row.id}
                 icon={<DeleteIcon />}
@@ -99,6 +107,14 @@ const Customer = () => {
                     setCurrent(params.row)
                     setOpenDescarga(true)
               }}
+            />,
+            <GridActionsCellItem key={params.row.id}
+              icon={<HistoryEduIcon color='action'/>}
+              label="Auditoria"
+              onClick={() => {
+                const data = params.row.auditoria.historial_cambios?params.row.auditoria.historial_cambios:''
+                handleOpenTradeability(data)
+              }}
             />
             ],
           },
@@ -112,9 +128,7 @@ const Customer = () => {
         setLoading(true)
         try {
             const response = await CustomerService.getCustomers(page)
-            //@ts-ignore
             setPageNro(Math.ceil((response.total/paginationNro.paginationNro)))
-             //@ts-ignore
             setCustomers(response.resultado)
         } catch (error) {
             toast.error('Error de listado')
@@ -189,8 +203,18 @@ const Customer = () => {
         setOpenDeleteDialog(false)
     }
     
+//Funciones para auditoria 
 
-    //Funciones de descarga 
+const handleOpenTradeability=(data:string)=>{
+    setAuditoriaData(data.split(';'))
+    setOpenAuditoria(true);
+  }
+  
+  const handleTradabilityOnClose=()=>{
+    setOpenAuditoria(false);
+  }
+  
+//Funciones de descarga 
 
 const handleDownloadSubmit = async()=>{
     setDownloadLoading(true);
@@ -267,6 +291,7 @@ const handleDownloadSubmit = async()=>{
                         oneCustomer={current?.id}
                     />
                 }
+                <ViewAuditoria onClose={handleTradabilityOnClose} open={openAuditoria} data={auditoriaData}/>  
             </>
         </Layout>    
     )

@@ -1,3 +1,4 @@
+import { IAuditoria } from "../customers/Customer"
 
 export interface IInvoice {
     id?: number
@@ -5,5 +6,6 @@ export interface IInvoice {
     Fecha_emicion: string
     monto: number
     cliente: JSON
+    auditoria:IAuditoria
     
 }
