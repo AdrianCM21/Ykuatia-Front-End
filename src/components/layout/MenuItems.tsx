@@ -5,7 +5,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import BarChartIcon from "@mui/icons-material/BarChart";
-
+import MapIcon from '@mui/icons-material/Map';
 import HomeIcon from "@mui/icons-material/Home";
 import GroupIcon from "@mui/icons-material/Group";
 import { styled } from "@mui/system";
@@ -72,6 +72,19 @@ export const MainMenuItems = () => {
               <BarChartIcon />
             </ListItemIcon>
             <ListItemText>Estadísticas</ListItemText>
+          </ListItemButton>
+        </CustomListItemButton>
+      </RouterLink>
+      <RouterLink
+        to="/mapas"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <CustomListItemButton selected={location.pathname === "/mapas"}>
+          <ListItemButton >
+            <ListItemIcon>
+              <MapIcon />
+            </ListItemIcon>
+            <ListItemText>Mapas</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
       </RouterLink>

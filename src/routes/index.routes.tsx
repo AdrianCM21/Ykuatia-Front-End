@@ -4,6 +4,7 @@ import Customer from "../pages/Customer";
 import { SignIn } from "../pages/auth/SingIn";
 import { isAuthenticated } from "../services/auth/auth";
 import { Invoices } from "../pages/Invoices";
+import { MapsMainScreen } from "../pages/mapas/MapsMainScreen";
 
 
 export const router = createBrowserRouter([
@@ -23,4 +24,8 @@ export const router = createBrowserRouter([
     path: 'login',
     element: !isAuthenticated() ? <SignIn /> : <Navigate to="/" />,
   },
+  {
+    path: 'mapas',
+    element: isAuthenticated() ? <MapsMainScreen /> : <Navigate to="/login" />,
+  }
 ]);
