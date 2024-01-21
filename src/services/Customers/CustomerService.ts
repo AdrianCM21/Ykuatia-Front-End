@@ -38,16 +38,6 @@ const getTipoCliente = async () => {
     }
 }
 
-
-const getCustomerRuc =async(ruc:string)=>{
-    try {
-        const { data: response}: AxiosResponse<ICustomer[]> = await axios.get('/api/customersruc/'+ruc)
-
-        return response
-    } catch (error) {
-        return Promise.reject(error)
-    }
-}
 const addCliente = async (data: ICustomer) => {
     try {
         const { data: response}: AxiosResponse<ICustomer> = await axios.post('/api/cliente', data)
@@ -87,4 +77,4 @@ const deleteCliente = async (id: string) => {
     }
 }
 
-export { getCustomers, addCliente, updateCliente, deleteCliente ,getCustomerRuc,getTipoCliente,getCustomersFactura}
+export { getCustomers, addCliente, updateCliente, deleteCliente ,getTipoCliente,getCustomersFactura}

@@ -12,6 +12,8 @@ import { styled } from "@mui/system";
 import { Typography } from "@mui/material";
 import Badge from "@mui/material/Badge";
 import PaymentIcon from '@mui/icons-material/Payment';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+
 
 import { checkInvoices } from "../../services/invoices/invoices.service";
 
@@ -92,6 +94,19 @@ export const MainMenuItems = () => {
               </Badge>
             </ListItemIcon>
             <ListItemText>Facturas</ListItemText>
+          </ListItemButton>
+        </CustomListItemButton>
+      </RouterLink>
+      <RouterLink
+        to="/caja"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <CustomListItemButton selected={location.pathname === "/caja"}>
+          <ListItemButton >
+            <ListItemIcon>
+            <AttachMoneyIcon />
+            </ListItemIcon>
+            <ListItemText>Caja</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
       </RouterLink>

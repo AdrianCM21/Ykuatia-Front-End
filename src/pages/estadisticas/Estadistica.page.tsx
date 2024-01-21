@@ -4,8 +4,7 @@ import { styled } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, LineChart } from 'recharts';
 import Layout from '../../components/layout/Layout';
-
-import { getCustomersFactura } from '../../services/Customers/CustomerService';
+import { getCustomers } from '../../services/Customers/CustomerService';
 import ICustomer from '../../interfaces/customers/Customer';
 import { MayorConsumo } from './components/EstadisticaMayorConsumo';
 import { SinPagar } from './components/EstadisticaSinPagar';
@@ -57,7 +56,7 @@ export const EstadisticaPage = () => {
     }, []);
     const getCustomersF = async () => {
         try {
-            const response = await getCustomersFactura();
+            const response = await getCustomers(1);
             setCustomers(response.resultado);
         } catch (error) {
             console.log(error)

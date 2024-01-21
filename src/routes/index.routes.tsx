@@ -7,6 +7,7 @@ import { Invoices } from "../pages/Invoices/Invoices.page";
 import { MapsMainScreen } from "../pages/mapas/MapsMainScreen";
 import { Pagos } from "../pages/pagos/Pagos.page";
 import { EstadisticaPage } from "../pages/estadisticas/Estadistica.page";
+import { CajaPage } from "../pages/caja/Caja.page";
 
 
 export const router = createBrowserRouter([
@@ -29,6 +30,10 @@ export const router = createBrowserRouter([
   {
     path: 'facturas',
     element: isAuthenticated() ? <Invoices /> : <Navigate to="/login" />,
+  },
+  {
+    path: 'caja',
+    element: isAuthenticated() ? <CajaPage /> : <Navigate to="/login" />,
   },
   {
     path: 'login',
