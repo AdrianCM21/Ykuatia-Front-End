@@ -41,6 +41,7 @@ export const CompletadoConsumo = ({ data, open, onClose }: IProps) => {
             setLoadingForm(true)
             const response = await envioConsumo(dataInvoice.id,dataInvoice.consumo) 
             setDatosTable(data.filter((d)=>{return d.id !== response.message.id}))
+            setLoadingForm(false)
                    
         } catch (error) {
             console.log(error)

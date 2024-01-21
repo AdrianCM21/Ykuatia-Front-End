@@ -6,6 +6,7 @@ import { isAuthenticated } from "../services/auth/auth";
 import { Invoices } from "../pages/Invoices/Invoices.page";
 import { MapsMainScreen } from "../pages/mapas/MapsMainScreen";
 import { Pagos } from "../pages/pagos/Pagos.page";
+import { EstadisticaPage } from "../pages/estadisticas/Estadistica.page";
 
 
 export const router = createBrowserRouter([
@@ -16,6 +17,10 @@ export const router = createBrowserRouter([
   {
     path:'/pagos',
     element: isAuthenticated() ? <Pagos /> : <Navigate to="/login" />,
+  },
+  {
+    path: 'estadisticas',
+    element: isAuthenticated() ? <EstadisticaPage/> : <Navigate to="/login" />,
   },
   {
     path: 'clientes',

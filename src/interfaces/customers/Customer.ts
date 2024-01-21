@@ -11,6 +11,7 @@ export default interface ICustomer {
     nombre: string
     direccion: string
     telefono:string
+    fecha_creacion: string
     tipoCliente: string
     auditoria?:IAuditoria
     factura:IInvoice[]

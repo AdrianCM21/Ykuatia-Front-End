@@ -14,16 +14,17 @@ interface FormDialogProps {
 
 
 export const FormCompletadoConsumo = ({ loading ,open, onClose, idInvoice,onSubmit }: FormDialogProps) => {
-    const defaultValues = {
-        consumo: 0,
-        id: idInvoice??0
-        }
-        
-       
-    const { register,control,setValue, handleSubmit, formState: { errors } } = useForm({defaultValues});
+
+ 
+    const { register,control, handleSubmit, formState: { errors }, reset } = useForm();
+
     useEffect(() => {
-        setValue('id', idInvoice);
-    }, [idInvoice, setValue]);
+        reset({
+            consumo: 0,
+            id: idInvoice ?? 0
+        });
+    }, [idInvoice, reset]);
+
 
     return (
         <Dialog
