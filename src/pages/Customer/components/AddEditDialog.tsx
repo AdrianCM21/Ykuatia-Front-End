@@ -2,8 +2,7 @@ import {  Button, Dialog, DialogActions, DialogContent, DialogTitle,  FormContro
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import ICustomer from "../../../interfaces/customers/Customer";
-import schema from "../../../schemas/Customer";
-import { yupResolver } from "@hookform/resolvers/yup";
+
 import CloseIcon from '@mui/icons-material/Close'
 import { LoadingButton } from "@mui/lab";
 import {  useSelector } from "react-redux";
@@ -11,6 +10,7 @@ import IResponseErrorCustomer from "../../../interfaces/customers/ResponsErrorCu
 import FormHeader from "../../../components/FormHeader";
 import { getTipoCliente } from "../../../services/Customers/CustomerService";
 import ICustomertypes from "../../../interfaces/customers/CustomersTypes";
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 
 interface IProps {
     open: boolean
@@ -29,17 +29,20 @@ const CustomerAddEditDialog = ({ open, loading, onSubmit, onClose, current }: IP
         direccion: current?.direccion ?? '',
         telefono: current?.telefono ?? '',
         tipoCliente:current?.tipoCliente ?? '',
-          }
+        locacion:current?.locacion?current.locacion: '',
+        }
 
-    console.log(defaultValues)
     //Obtencion de datos de tipo cliente para el select
     const [tipoCliente, setTipoCliente] = useState<ICustomertypes[]>([]);
     const [loadingSelect,setLoadingSelect] = useState<boolean>(true)
+
+    const [position, setPosition] = useState<[number, number] | null>(current?.locacion?current.locacion.split(',').map(Number) as [number,number]:null);
     useEffect(() => {
       
     getTiposSelect()
       
     }, [])
+  
 
     const getTiposSelect= async()=>{
         try {
@@ -56,12 +59,24 @@ const CustomerAddEditDialog = ({ open, loading, onSubmit, onClose, current }: IP
         reset,
         control,
         handleSubmit,
+        setValue,
         formState: { errors }
     } = useForm({
         defaultValues,
         mode: 'onChange',
-        resolver: yupResolver(schema)
+        // resolver: yupResolver(schema)
     });
+    const Markers = () => {
+        useMapEvents({
+            click: (e:any) => {
+                const newPosition:[number,number] = [e.latlng.lat, e.latlng.lng];
+                setPosition(newPosition);
+                setValue('locacion', newPosition.join(',')); // Actualiza el valor de 'locacion'
+            },
+        });
+    
+        return position === null ? null : <Marker position={position} />;
+    };
 
     const handleClose = () => {
         reset();
@@ -88,6 +103,7 @@ const CustomerAddEditDialog = ({ open, loading, onSubmit, onClose, current }: IP
                         <CloseIcon />
                     </IconButton>
                 </DialogTitle>
+                {/* @ts-ignores */}
                 <form onSubmit={handleSubmit(onSubmit)}>
                     <DialogContent sx={{ py: 0 }}>
                        
@@ -185,6 +201,23 @@ const CustomerAddEditDialog = ({ open, loading, onSubmit, onClose, current }: IP
                             />
                          {errors.tipoCliente && <FormHelperText sx={{ color: 'error.main' }}>{errors.tipoCliente.message}</FormHelperText>}
                         </FormControl>
+                        {/* @ts-ignore */}
+                        <MapContainer center={ [ -26.6324065, -55.51918569999999] as [number,number]} zoom={13} style={{ height: "58vh", width: "100%" }}>
+                            <TileLayer
+                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            />
+                            <Markers />
+                        </MapContainer>
+                        <Controller
+                            name='locacion'
+                            control={control}
+                            render={({ field }) => (
+                                <input
+                                    type="hidden"
+                                    {...field} // Propaga las propiedades del campo, incluyendo 'value'
+                                />
+                            )}
+                        />
                        
                        
                     <Controller

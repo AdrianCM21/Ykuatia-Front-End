@@ -23,7 +23,6 @@ export const ClientesAntiguos: React.FC<DialogComponentProps> = ({ open, handleC
         }
         const result = data.map((item) => {
             const antiguedad = differenceInMonths(new Date(), new Date(item.fecha_creacion));
-            console.log(antiguedad)
             return {cliente:item.nombre,antiguedad}
         });
         setClientesAntiguos(result);

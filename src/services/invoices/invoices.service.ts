@@ -65,7 +65,6 @@ export const checkInvoices = async ():Promise<boolean> => {
 export const envioConsumo = async (id:number,consumo:number):Promise<IInvoiceCargaConsumoResponse> => {
     try {
         const response: AxiosResponse<IInvoiceCargaConsumoResponse> = await axios.post(`/api/facturas/${id}`,{consumo})
-        console.log(response)
         if (response.status !== 200) {
             toast.error('Error al enviar el consumo')
         }
@@ -81,7 +80,6 @@ export const pagos= async (pagos:object[]) => {
     try {
        
         const response= await axios.post(`/api/facturapagos`,{pagos})
-        console.log(response)
         if (response.status !== 200) {
             toast.error('Error al pagar la factura')
         }

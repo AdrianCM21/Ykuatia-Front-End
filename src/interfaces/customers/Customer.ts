@@ -15,5 +15,6 @@ export default interface ICustomer {
     tipoCliente: string
     auditoria?:IAuditoria
     factura:IInvoice[]
+    locacion?:string
     
 }

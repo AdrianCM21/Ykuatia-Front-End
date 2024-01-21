@@ -12,7 +12,6 @@ const getCustomers = async (page:number) => {
         const { data: response}: AxiosResponse<ICustomerResponose> = await axios.get('/api/cliente',{params: {
             desde: paginationNro.paginationNro*(page-1)
            }})
-           console.log(response)
         return response
     } catch (error) {
         return Promise.reject(error)
@@ -23,7 +22,6 @@ const getCustomersFactura = async () => {
         const { data: response}: AxiosResponse<ICustomerResponose> = await axios.get('/api/clientefactura',{params: {
             desde: 0
            }})
-           console.log(response)
         return response
     } catch (error) {
         return Promise.reject(error)
@@ -56,6 +54,7 @@ const addCliente = async (data: ICustomer) => {
        
         return response
     } catch (error) {
+        console.log(error)
         return Promise.reject(error)
     }
 }
@@ -67,9 +66,11 @@ const updateCliente = async (data: ICustomer) => {
 
     try {
         const { data: response}: AxiosResponse<ICustomer> = await axios.put('/api/cliente/'+id, values)
+        
 
         return response
     } catch (error) {
+        console.log(error)
 
         return Promise.reject(error)
     }
