@@ -69,7 +69,7 @@ export const PagoForm = ({data, loading ,open, onClose,onSubmit }: FormDialogPro
                                 {data?.factura?.map((factura, index) => (
                                     <TableRow key={factura.id} sx={{ '&:nth-of-type(odd)': { backgroundColor: '#f9f9f9' } }}> {/* Agrega rayas a las filas */}
                                         <TableCell>{format(new Date(factura.Fecha_emicion), 'MM/yyyy')}</TableCell>
-                                        <TableCell>{factura.monto}</TableCell>
+                                        <TableCell>{factura.monto} Gs</TableCell>
                                         <TableCell>
                                             <Controller
                                                 control={control}
@@ -92,7 +92,7 @@ export const PagoForm = ({data, loading ,open, onClose,onSubmit }: FormDialogPro
                         </Table>
                     </TableContainer>
                     <Box mt={2}> {/* Agrega espaciado */}
-                        <Typography variant="h6">Total a pagar: {total}</Typography>
+                        <Typography variant="h6">Total a pagar: {total} Gs</Typography>
                     </Box>
                     <DialogActions>
                         <Button onClick={onClose}>Cancelar</Button>

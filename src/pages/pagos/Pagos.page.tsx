@@ -18,6 +18,12 @@ export const Pagos = () => {
 
     // Variables para paginacion
   const [refres,setRefres] = useState<number>(1)
+
+  // Variables para busqueda
+    const [searchText, setSearchText] = useState<string>('');
+    const [customerFilter, setCustomerFilter] = useState<ICustomer[]>([]);
+
+  // Variables para Formulario
   const [openFormDialog, setOpenFormDialog] = useState(false);
   const [loadingForm, setLoadingForm] = useState(false);
   const [customerData, setCustomerData] = useState<ICustomer>();
@@ -60,6 +66,7 @@ export const Pagos = () => {
         try {
             const response = await CustomerService.getCustomersFactura()
             setCustomers(response.resultado)
+            setCustomerFilter(response.resultado)
         } catch (error) {
             toast.error('Error de listado')
         }
@@ -81,17 +88,30 @@ export const Pagos = () => {
             await pagos(dataInvoice.factura as object[])
             setRefres(refres?0:1)
             handleFormDialogClose()
+            return
                    
         } catch (error) {
             console.log(error)
         }
-        // handleFormDialogClose()
+        handleFormDialogClose()
         
     };
 
     const handleFormDialogClose = () => {
         setOpenFormDialog(false);
     };
+
+    //funciones de busqueda 
+    const handleSearch = (event:any,setSearchText:React.Dispatch<React.SetStateAction<string>>) => {
+        const searchText = event.target.value.toLowerCase();
+        setSearchText(searchText);
+    
+        // Filtrar los elementos que coincidan con el texto de búsqueda
+        const filtered = customers.filter((item) =>
+          item['nombre'].toLowerCase().includes(searchText)
+        );
+        setCustomerFilter(filtered)
+      };
 
 
     return (
@@ -102,15 +122,15 @@ export const Pagos = () => {
                         <Box sx={{marginBottom:'1.3em'}}>
                             <TextField
                             label="Buscar por nombre"
-                        // value={search}
-                        // onChange={(e) => setSearch(e.target.value)}
+                            value={searchText}
+                            onChange={(e) => handleSearch(e,setSearchText)}
                             />
                         </Box>
                    
                         <Box sx={{ height: 400 }}>
                             <DataGrid
                                 columns={columns} 
-                                rows={customers} 
+                                rows={customerFilter} 
                                 localeText={esES.components.MuiDataGrid.defaultProps.localeText}
                                 disableColumnMenu={true}
                                 loading={loading}
