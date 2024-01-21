@@ -18,6 +18,17 @@ const getCustomers = async (page:number) => {
         return Promise.reject(error)
     }
 }
+const getCustomersFactura = async () => {
+    try {
+        const { data: response}: AxiosResponse<ICustomerResponose> = await axios.get('/api/clientefactura',{params: {
+            desde: 0
+           }})
+           console.log(response)
+        return response
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
 
 const getTipoCliente = async () => {
     try {
@@ -75,4 +86,4 @@ const deleteCliente = async (id: string) => {
     }
 }
 
-export { getCustomers, addCliente, updateCliente, deleteCliente ,getCustomerRuc,getTipoCliente}
+export { getCustomers, addCliente, updateCliente, deleteCliente ,getCustomerRuc,getTipoCliente,getCustomersFactura}

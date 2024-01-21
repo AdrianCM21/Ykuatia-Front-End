@@ -5,12 +5,17 @@ import { SignIn } from "../pages/auth/SingIn";
 import { isAuthenticated } from "../services/auth/auth";
 import { Invoices } from "../pages/Invoices/Invoices.page";
 import { MapsMainScreen } from "../pages/mapas/MapsMainScreen";
+import { Pagos } from "../pages/pagos/Pagos.page";
 
 
 export const router = createBrowserRouter([
   {
     path: '/',
     element: isAuthenticated() ? <Home /> : <Navigate to="/login" />,
+  },
+  {
+    path:'/pagos',
+    element: isAuthenticated() ? <Pagos /> : <Navigate to="/login" />,
   },
   {
     path: 'clientes',

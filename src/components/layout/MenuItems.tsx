@@ -11,6 +11,8 @@ import GroupIcon from "@mui/icons-material/Group";
 import { styled } from "@mui/system";
 import { Typography } from "@mui/material";
 import Badge from "@mui/material/Badge";
+import PaymentIcon from '@mui/icons-material/Payment';
+
 import { checkInvoices } from "../../services/invoices/invoices.service";
 
 
@@ -47,6 +49,20 @@ export const MainMenuItems = () => {
             <ListItemText>
               <Typography color={"#000"}>Inicio</Typography>
             </ListItemText>
+          </ListItemButton>
+        </CustomListItemButton>
+      </RouterLink>
+
+      <RouterLink
+        to="/pagos"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <CustomListItemButton selected={location.pathname === "/pagos"}>
+          <ListItemButton >
+            <ListItemIcon>
+            <PaymentIcon />
+            </ListItemIcon>
+            <ListItemText>Pagos</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
       </RouterLink>

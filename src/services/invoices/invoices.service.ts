@@ -77,3 +77,19 @@ export const envioConsumo = async (id:number,consumo:number):Promise<IInvoiceCar
     }
 }
 
+export const pagos= async (pagos:object[]) => {
+    try {
+       
+        const response= await axios.post(`/api/facturapagos`,{pagos})
+        console.log(response)
+        if (response.status !== 200) {
+            toast.error('Error al pagar la factura')
+        }
+        toast.success('Factura pagada')
+        return response.data
+    } catch (error) {
+        console.log(error)
+        return Promise.reject(error)
+    }
+}
+
