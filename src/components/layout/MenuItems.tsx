@@ -13,6 +13,8 @@ import { Typography } from "@mui/material";
 import Badge from "@mui/material/Badge";
 import PaymentIcon from '@mui/icons-material/Payment';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import SettingsIcon from '@mui/icons-material/Settings';
+
 
 
 import { checkInvoices } from "../../services/invoices/invoices.service";
@@ -135,6 +137,19 @@ export const MainMenuItems = () => {
               <MapIcon />
             </ListItemIcon>
             <ListItemText>Mapas</ListItemText>
+          </ListItemButton>
+        </CustomListItemButton>
+      </RouterLink>}
+      {isAuthenticated()&& <RouterLink
+        to="/configuracion"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <CustomListItemButton selected={location.pathname === "/configuracion"}>
+          <ListItemButton >
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText>Configuracion</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
       </RouterLink>}

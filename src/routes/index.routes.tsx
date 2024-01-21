@@ -8,7 +8,7 @@ import { MapsMainScreen } from "../pages/mapas/MapsMainScreen";
 import { Pagos } from "../pages/pagos/Pagos.page";
 import { EstadisticaPage } from "../pages/estadisticas/Estadistica.page";
 import { CajaPage } from "../pages/caja/Caja.page";
-
+import { ConfiguracionesPage } from "../pages/configuraciones/Configuraciones.page";
 
 export const router = createBrowserRouter([
   {
@@ -42,5 +42,8 @@ export const router = createBrowserRouter([
   {
     path: 'mapas',
     element: isCampo() ? <MapsMainScreen /> : <Navigate to="/login" />,
-  }
+  }, {
+    path: 'configuracion',
+    element: isAuthenticated() ? <ConfiguracionesPage /> : <Navigate to="/login" />,
+  },
 ]);

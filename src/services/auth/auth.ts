@@ -7,12 +7,12 @@ const login = async (data:ILoginData) => {
   try {
     const response: AxiosResponse = await axios.post('/api/login', data);
       toast.success('Inicio de sesión correcta');
-      console.log(response.data)
       localStorage.setItem('x-token', response.data);
 
     return response;
   } catch (error:any) {
     if (error.response && error.response.status === 401) {
+      console.log(error)
       toast.error('No estás autorizado para acceder a esta página');
       return error
     } else {
@@ -29,7 +29,6 @@ const isAuthenticated = () => {
     if(!accessToken){
       return false
     }else{
-      console.log(jwtDecode(accessToken))
       const rol=jwtDecode(accessToken)
       //@ts-ignore
       if(rol.rol==='admin'){
@@ -45,7 +44,6 @@ const isCampo =()=>{
     if(!accessToken){
       return false
     }else{
-      console.log(jwtDecode(accessToken))
       const rol=jwtDecode(accessToken)
       //@ts-ignore
       if(rol.rol==='admin'|| rol.rol==='agente de campo'){
