@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import Home from "../pages/Home";
 import Customer from "../pages/Customer/Customer.page";
 import { SignIn } from "../pages/auth/SingIn";
-import { isAuthenticated } from "../services/auth/auth";
+import { isAuthenticated, isCampo } from "../services/auth/auth";
 import { Invoices } from "../pages/Invoices/Invoices.page";
 import { MapsMainScreen } from "../pages/mapas/MapsMainScreen";
 import { Pagos } from "../pages/pagos/Pagos.page";
@@ -13,7 +13,7 @@ import { CajaPage } from "../pages/caja/Caja.page";
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: isAuthenticated() ? <Home /> : <Navigate to="/login" />,
+    element: isCampo() ? <Home /> : <Navigate to="/login" />,
   },
   {
     path:'/pagos',
@@ -29,7 +29,7 @@ export const router = createBrowserRouter([
   },
   {
     path: 'facturas',
-    element: isAuthenticated() ? <Invoices /> : <Navigate to="/login" />,
+    element: isCampo() ? <Invoices /> : <Navigate to="/login" />,
   },
   {
     path: 'caja',
@@ -37,10 +37,10 @@ export const router = createBrowserRouter([
   },
   {
     path: 'login',
-    element: !isAuthenticated() ? <SignIn /> : <Navigate to="/" />,
+    element: !isCampo() ? <SignIn /> : <Navigate to="/" />,
   },
   {
     path: 'mapas',
-    element: isAuthenticated() ? <MapsMainScreen /> : <Navigate to="/login" />,
+    element: isCampo() ? <MapsMainScreen /> : <Navigate to="/login" />,
   }
 ]);

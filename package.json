@@ -21,6 +21,7 @@
     "axios": "^1.6.5",
     "date-fns": "^3.2.0",
     "env": "^0.0.2",
+    "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-date-range": "^2.0.0-alpha.4",

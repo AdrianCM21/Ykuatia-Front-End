@@ -16,6 +16,7 @@ import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 
 
 import { checkInvoices } from "../../services/invoices/invoices.service";
+import { isAuthenticated, isCampo } from "../../services/auth/auth";
 
 
 const CustomListItemButton = styled(ListItemButton)(({ theme, selected }) => ({
@@ -55,7 +56,7 @@ export const MainMenuItems = () => {
         </CustomListItemButton>
       </RouterLink>
 
-      <RouterLink
+      {isAuthenticated()&&<RouterLink
         to="/pagos"
         style={{ textDecoration: "none", color: "inherit" }}
       >
@@ -67,9 +68,9 @@ export const MainMenuItems = () => {
             <ListItemText>Pagos</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
-      </RouterLink>
+      </RouterLink>}
       
-      <RouterLink
+      {isAuthenticated()&&<RouterLink
         to="/clientes"
         style={{ textDecoration: "none", color: "inherit" }}
       >
@@ -81,8 +82,8 @@ export const MainMenuItems = () => {
             <ListItemText>Usuarios</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
-      </RouterLink>
-      <RouterLink
+      </RouterLink>}
+      {isCampo()&&<RouterLink
         to="/facturas"
         style={{ textDecoration: "none", color: "inherit" }}
       >
@@ -96,8 +97,8 @@ export const MainMenuItems = () => {
             <ListItemText>Facturas</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
-      </RouterLink>
-      <RouterLink
+      </RouterLink>}
+      {isAuthenticated()&&<RouterLink
         to="/caja"
         style={{ textDecoration: "none", color: "inherit" }}
       >
@@ -109,9 +110,9 @@ export const MainMenuItems = () => {
             <ListItemText>Caja</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
-      </RouterLink>
+      </RouterLink>}
 
-      <RouterLink
+{isAuthenticated()&& <RouterLink
         to="/estadisticas"
         style={{ textDecoration: "none", color: "inherit" }}
       >
@@ -123,8 +124,8 @@ export const MainMenuItems = () => {
             <ListItemText>Estadísticas</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
-      </RouterLink>
-      <RouterLink
+      </RouterLink>}
+      {isCampo()&& <RouterLink
         to="/mapas"
         style={{ textDecoration: "none", color: "inherit" }}
       >
@@ -136,7 +137,7 @@ export const MainMenuItems = () => {
             <ListItemText>Mapas</ListItemText>
           </ListItemButton>
         </CustomListItemButton>
-      </RouterLink>
+      </RouterLink>}
 
 
       <ListItemButton></ListItemButton>
