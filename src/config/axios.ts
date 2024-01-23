@@ -11,6 +11,17 @@ import { resetError422 } from '../redux/error422Slice';
     "x-api-key": config.apiKey
   },
 })
+
+axiosGlogal.interceptors.request.use((config) => {
+  const token = localStorage.getItem('x-token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => {
+  return Promise.reject(error);
+});
+
 // Estas funciones atrapan las respuestas de todas la peticines que realizes 
 axiosGlogal.interceptors.response.use((response)=>{
   store.dispatch(resetError422(''))
