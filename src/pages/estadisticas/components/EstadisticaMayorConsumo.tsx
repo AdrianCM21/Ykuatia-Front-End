@@ -65,7 +65,7 @@ export const MayorConsumo: React.FC<DialogComponentProps> = ({ open, handleClose
                         </YAxis>
                         <Tooltip />
                         <Legend verticalAlign="top" wrapperStyle={{ lineHeight: '40px' }} />
-                        <Line type="monotone" dataKey="consumo" stroke="#4682B4" name="Consumo" />
+                        <Line type="monotone" dataKey="consumo" stroke="#4682B4" name="Consumo" strokeWidth={3} />
                     </LineChart>
                 </ResponsiveContainer>
             </DialogContent>

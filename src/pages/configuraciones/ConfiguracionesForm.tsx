@@ -11,8 +11,9 @@ import {
   FormControl,
   InputLabel,
   Input,
-  Typography,
+  IconButton,
 } from "@mui/material";
+import SettingsIcon from '@mui/icons-material/Settings';
 import { LoadingButton } from "@mui/lab";
 import { useEffect } from "react";
 import { ITipoCliente } from "../../interfaces/configuracion/configuracion";
@@ -38,12 +39,10 @@ export const ConfiguracionesForm= ({ loading, onSubmit, onOpen, onClose,open,dat
 
   return (
       <Box p={3}>
-        <Typography variant="h5" gutterBottom>
-          Configuraciones
-        </Typography>
-        <Button variant="contained" color="primary" onClick={onOpen}>
+        <IconButton color="primary" onClick={onOpen}>
+          <SettingsIcon />
           Abrir Configuraciones
-        </Button>
+        </IconButton>
         <Dialog open={open} onClose={onClose}>
           <DialogTitle>Configuraciones</DialogTitle>
           <DialogContent>

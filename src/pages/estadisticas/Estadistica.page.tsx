@@ -4,7 +4,7 @@ import { styled } from '@mui/system';
 import { useEffect, useState } from 'react';
 import { BarChart, Bar, LineChart } from 'recharts';
 import Layout from '../../components/layout/Layout';
-import { getCustomers } from '../../services/Customers/CustomerService';
+import { getCustomers,getCustomersFactura } from '../../services/Customers/CustomerService';
 import ICustomer from '../../interfaces/customers/Customer';
 import { MayorConsumo } from './components/EstadisticaMayorConsumo';
 import { SinPagar } from './components/EstadisticaSinPagar';
@@ -29,6 +29,7 @@ const Chart = styled(BarChart)(() => ({
 
 export const EstadisticaPage = () => {
     const [customers, setCustomers] = useState<ICustomer[]>([]); 
+    const [customersPendiente,setCustomersPendiente] = useState<ICustomer[]>([]); 
     const [facturas, setFacturas] = useState<IInvoice[]>([]);
 
     const [openDialog, setOpenDialog] = useState({ consumo: false, pago: false, antiguo: false, mayorDeudaGuarani: false });
@@ -53,7 +54,16 @@ export const EstadisticaPage = () => {
     useEffect(() => {
         getCustomersF();
         getFacturasF();
+        getCustomersFacturaPendiente()
     }, []);
+    const getCustomersFacturaPendiente = async () => {
+        try {
+            const response = await getCustomersFactura()
+            setCustomersPendiente(response.resultado);
+        } catch (error) {
+            console.log(error)
+        }
+    }
     const getCustomersF = async () => {
         try {
             const response = await getCustomers(1);
@@ -70,6 +80,7 @@ export const EstadisticaPage = () => {
             console.log(error)
         }
     }
+    
 
 
     return (
@@ -84,7 +95,7 @@ export const EstadisticaPage = () => {
                             </Chart>
                         </CardContent>
                     </Card>
-                    <SinPagar data={customers} open={openDialog.pago} handleClose={() => handleClose('pago')} title="Estadisticas de facturas sin pagar" />
+                    <SinPagar data={customersPendiente} open={openDialog.pago} handleClose={() => handleClose('pago')} title="Estadisticas de facturas sin pagar" />
                 </Grid>
                 <Grid item xs={6}>
                 <Card onClick={() => handleOpen('consumo')}>
@@ -117,7 +128,7 @@ export const EstadisticaPage = () => {
                             </Chart>
                         </CardContent>
                     </Card>
-                    <MayorDeudaGuaranies data={customers} open={openDialog.mayorDeudaGuarani} handleClose={() => handleClose('mayorDeudaGuarani')} title="Estadísticas de mayor deuda en guaranies" />
+                    <MayorDeudaGuaranies data={customersPendiente} open={openDialog.mayorDeudaGuarani} handleClose={() => handleClose('mayorDeudaGuarani')} title="Estadísticas de mayor deuda en guaranies" />
                 </Grid>
             </Grid>
         </Layout>

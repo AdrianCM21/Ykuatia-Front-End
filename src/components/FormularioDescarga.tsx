@@ -32,7 +32,7 @@ export const FormularioDescarga = ({ open, loading, onConfirm, onClose }: IProps
             <DialogTitle>{'CONFIRMAR DESCARGA'}</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                {'Desea descargar el archivo PDF del Kude?'}
+                {'Desea descargar el archivo pdf con las facturas pendientes?'}
               </DialogContentText>
             </DialogContent>
             <DialogActions sx={{ justifyContent: 'right' }}>

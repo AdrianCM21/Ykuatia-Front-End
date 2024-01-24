@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import Layout from "../../components/layout/Layout"
-import { Box } from "@mui/material";
+import { Box, Card, CardContent, Grid, Typography } from "@mui/material";
 import { ConfiguracionesForm } from "./ConfiguracionesForm";
 import { ITipoCliente } from "../../interfaces/configuracion/configuracion";
 import { getConfig, updateConfig } from "../../services/configuraciones/configuraciones.service";
@@ -50,9 +50,19 @@ export const ConfiguracionesPage =()=>{
   
     return(
         <Layout>
-            <Box>
-                <ConfiguracionesForm loading={loading} onClose={handleCloseDialog} onOpen={handleOpenDialog} onSubmit={onSubmit} open={openDialog} data={config}/>
-            </Box>
+            <Grid container height='25em' sx={{display:'flex',flexDirection:'column'}}>
+            <Typography variant="h5">Configuraciones</Typography>
+             <Grid item xs={4}  marginTop={5}>
+             <Card style={{ border: '2px solid rgba(0, 0, 0, 0.1)', borderRadius: '10px' }}>
+                        <CardContent>
+                            <Box>
+                                <ConfiguracionesForm loading={loading} onClose={handleCloseDialog} onOpen={handleOpenDialog} onSubmit={onSubmit} open={openDialog} data={config}/>
+                            </Box>
+                        </CardContent>
+                            
+                    </Card>
+                </Grid>
+            </Grid>
         </Layout>
     )
 }
