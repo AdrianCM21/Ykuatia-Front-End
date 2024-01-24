@@ -11,6 +11,7 @@ import { CajaPage } from "../pages/caja/Caja.page";
 import { ConfiguracionesPage } from "../pages/configuraciones/Configuraciones.page";
 import { CampoPage } from "../pages/campo/compo.page";
 import { MapsMainScreenMovil } from "../pages/campo/mapas/MapsMainScreen";
+import { NotificacionPage } from "../pages/campo/notificaciones/Notificaciones.page";
 
 export const router = createBrowserRouter([
   {
@@ -52,6 +53,10 @@ export const router = createBrowserRouter([
   {
     path: 'campo/mapa',
     element: isCampo() ? <MapsMainScreenMovil /> : <Navigate to="/login" />,
+  },
+  {
+    path: 'campo/notificaciones',
+    element: isCampo() ? <NotificacionPage/> : <Navigate to="/login" />,
   },
   {
     path: 'configuracion',

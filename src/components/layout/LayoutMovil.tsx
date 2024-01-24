@@ -61,6 +61,17 @@ export const LayoutMovil = ({ children, sectionTitle, Action, actionText }:IProp
           </ListItemButton>
         </CustomListItemButton>
       </RouterLink>
+      <RouterLink
+        to="/campo/notificaciones"
+        style={{ textDecoration: "none", color: "inherit" }}
+      >
+        <CustomListItemButton selected={location.pathname === "/campo/mapa"}>
+          <ListItemButton >
+
+            <Typography color={"#fff"}>Notificacion</Typography>
+          </ListItemButton>
+        </CustomListItemButton>
+      </RouterLink>
       </React.Fragment>
             <Badge color="secondary">
               <LogoutButtonMovil />
