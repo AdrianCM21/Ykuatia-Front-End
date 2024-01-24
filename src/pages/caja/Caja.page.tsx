@@ -8,6 +8,8 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid"
 import { addCaja, getCaja } from "../../services/caja/Caja.service"
 import paginationNro from "../../config/paginationNro"
 import { toast } from "react-toastify"
+import { DateRangeFilter } from "../../components/DateRangeFilter"
+import {format, startOfMonth, endOfMonth } from "date-fns"
 
   
 
@@ -20,6 +22,25 @@ export const CajaPage = () => {
     const [pageNro, setPageNro] = useState<number>(0)
     const [refres,setRefres] = useState<number>(1)
     const [total,setTotal] = useState<number>(0)
+
+// variable para filter
+const [dataFilter, setDataFilter] = useState([
+    {
+        startDate: startOfMonth(new Date()),
+        endDate: endOfMonth(new Date()),
+        key: 'selection'
+    }
+]);
+const [filteredRows,setFilterdRows] = useState<ICaja[]>([])
+useEffect(() => {
+   setFilterdRows( caja.filter((row) => {
+        const date = new Date(row.fecha);
+        return (!dataFilter[0].startDate || date >= dataFilter[0].startDate) && (!dataFilter[0].endDate || date <= dataFilter[0].endDate);
+    }))
+  
+}, [dataFilter[0],caja])
+
+
 
     const handleOnClose=()=>{
         setOpenDialogForm(false)
@@ -40,6 +61,7 @@ export const CajaPage = () => {
         }
         setLoading(false)
     }
+    
 
     const columns: GridColDef[] = [
         {
@@ -49,8 +71,22 @@ export const CajaPage = () => {
         },
         {
             flex: 0.10,
+            field: 'fecha',
+            headerName: 'Fecha',
+            type: 'date',
+            valueFormatter: (params) => format(new Date(params.value), 'dd/MM/yyyy'),
+            filterable:true
+        },
+        {
+            flex: 0.10,
             field: 'motivo',
             headerName: 'Motivo'
+        },
+        {
+            flex: 0.10,
+            field: 'tipo_ingreso',
+            headerName: 'Tipo de operacion',
+            valueGetter: (params) => params.row.tipo_ingreso.descripcion
         },
         {
             flex: 0.10,
@@ -65,7 +101,7 @@ export const CajaPage = () => {
       const onSubmitForm = async (data:any) => {
         await addCaja(data)
         setRefres(refres?0:1)
-        handleOnClose(); // Cerrar el Dialog después de enviar el formulario
+        handleOnClose(); 
       };
     
     
@@ -75,7 +111,13 @@ export const CajaPage = () => {
         <Grid container spacing={3}>
             <Grid item lg={12}>
             <Box display="flex" justifyContent="space-between">
-                <TableHeader onAdd={() => setOpenDialogForm(true)}/>
+                <Box display={"flex"} >
+                    <Box marginRight={2}>
+                        <TableHeader onAdd={() => setOpenDialogForm(true)}/>
+                    </Box>
+                    <DateRangeFilter dateRange={dataFilter} setDateRange={setDataFilter}/>
+                </Box>
+           
                 <Typography variant="h5">
                     Total Caja: {total} Gs
                 </Typography>
@@ -83,7 +125,7 @@ export const CajaPage = () => {
                 <Box sx={{ height: 400 }}>
                     <DataGrid
                         columns={columns} 
-                        rows={caja} 
+                        rows={filteredRows} 
                         loading={loading}
                         hideFooter={true}
                     />

@@ -54,4 +54,19 @@ const isCampo =()=>{
 
 }
 
-export {login,logout,isCampo, isAuthenticated}
+const isAloneCampo =()=>{
+  const accessToken = localStorage.getItem('x-token');
+    if(!accessToken){
+      return false
+    }else{
+      const rol=jwtDecode(accessToken)
+      //@ts-ignore
+      if( rol.rol==='agente de campo'){
+        return true
+      }
+      return false
+    }
+
+}
+
+export {login,logout,isCampo, isAuthenticated,isAloneCampo}
