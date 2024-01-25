@@ -1,64 +1,80 @@
-// import axios from "../../config/axios";
-// import { AxiosResponse } from "axios";
-// import ICustomer from "../../interfaces/customers/Customer";
-// import paginationNro from "../../config/paginationNro";
-// import IResponseCustomer from "../../interfaces/customers/ResponsCustomers";
+import axios from "../../config/axios";
+import { AxiosResponse } from "axios";
+import ICustomer from "../../interfaces/customers/Customer";
+import paginationNro from "../../config/paginationNro";
+
+import ICustomertypes from "../../interfaces/customers/CustomersTypes";
+import { ICustomerResponose } from "../../interfaces/customers/CustomesResponse";
 
 
-// const getCustomers = async (page:number) => {
-//     try {
-//         const { data: response}: AxiosResponse<IResponseCustomer> = await axios.get('/api/customers',{params: {
-//             desde: paginationNro.paginationNro*(page-1)
-//            }})
-    
-//         return response
-//     } catch (error) {
-//         return Promise.reject(error)
-//     }
-// }
+const getCustomers = async (page:number) => {
+    try {
+        const { data: response}: AxiosResponse<ICustomerResponose> = await axios.get('/api/cliente',{params: {
+            desde: paginationNro.paginationNro*(page-1)
+           }})
+        return response
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
+const getCustomersFactura = async () => {
+    try {
+        const { data: response}: AxiosResponse<ICustomerResponose> = await axios.get('/api/clientefactura',{params: {
+            desde: 0
+           }})
+        return response
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
 
-// const getCustomerRuc =async(ruc:string)=>{
-//     try {
-//         const { data: response}: AxiosResponse<ICustomer[]> = await axios.get('/api/customersruc/'+ruc)
-
-//         return response
-//     } catch (error) {
-//         return Promise.reject(error)
-//     }
-// }
-// const addCustomer = async (data: ICustomer) => {
-//     try {
-//         const { data: response}: AxiosResponse<ICustomer> = await axios.post('/api/customers', data)
-
-//         return response
-//     } catch (error) {
-//         return Promise.reject(error)
-//     }
-// }
-
-// const updateCustomer = async (data: ICustomer) => {
-//     const { id } = data
-//     const { id: _, ...values } = data
-
-//     try {
-//         const { data: response}: AxiosResponse<ICustomer> = await axios.put('/api/customers/'+id, values)
-
-//         return response
-//     } catch (error) {
-
-//         return Promise.reject(error)
-//     }
-// }
-
-// const deleteCustomer = async (id: string) => {
-//     try {
-//         const { data: response}: AxiosResponse = await axios.delete('/api/customers/'+id)
-
-//         return response
-//     } catch (error) {
+const getTipoCliente = async () => {
+    try {
+        const { data: response}: AxiosResponse<ICustomertypes[]> = await axios.get('/api/clientetipo')
         
-//         return Promise.reject(error)
-//     }
-// }
+        return response
+    } catch (error) {
+        return Promise.reject(error)
+    }
+}
 
-// export { getCustomers, addCustomer, updateCustomer, deleteCustomer ,getCustomerRuc}
+const addCliente = async (data: ICustomer) => {
+    try {
+        const { data: response}: AxiosResponse<ICustomer> = await axios.post('/api/cliente', data)
+       
+        return response
+    } catch (error) {
+        console.log(error)
+        return Promise.reject(error)
+    }
+}
+
+const updateCliente = async (data: ICustomer) => {
+    const { id } = data
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id: _, ...values } = data
+
+    try {
+        const { data: response}: AxiosResponse<ICustomer> = await axios.put('/api/cliente/'+id, values)
+        
+
+        return response
+    } catch (error) {
+        console.log(error)
+
+        return Promise.reject(error)
+    }
+}
+
+const deleteCliente = async (id: string) => {
+    try {
+        const { data: response}: AxiosResponse = await axios.delete('/api/cliente/'+id)
+
+        return response
+    } catch (error) {
+        
+        return Promise.reject(error)
+    }
+}
+
+export { getCustomers, addCliente, updateCliente, deleteCliente ,getTipoCliente,getCustomersFactura}

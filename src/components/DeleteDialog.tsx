@@ -13,7 +13,9 @@ interface IProps {
 const DeleteDialog = ({ open, loading, onConfirm, onClose }: IProps) => {
 
   const handleDialogClose = (
-    event: {},
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     reason: "backdropClick" | "escapeKeyDown"
   ) => {
     onClose();

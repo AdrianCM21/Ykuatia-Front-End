@@ -1,5 +1,7 @@
-import { Box, Grid, Pagination } from "@mui/material"
+import { Box, Button, Grid, Pagination} from "@mui/material"
 import Layout from "../../components/layout/Layout"
+import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
+
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ICustomer from "../../interfaces/customers/Customer";
@@ -10,11 +12,16 @@ import TableHeader from "../../components/TableHeader";
 import DeleteIcon from '@mui/icons-material/Delete';
 import DeleteDialog from "../../components/DeleteDialog";
 import paginationNro from "../../config/paginationNro";
-import { useDispatch } from "react-redux";
-import { resetError422 } from "../../redux/error422Slice";
+// import { useDispatch } from "react-redux";
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+
+// import { resetError422 } from "../../redux/error422Slice";
+import { FormularioDescarga } from "../../components/FormularioDescarga";
+import { downloadInvoice, downloadInvoices } from "../../services/invoices/invoices.service";
+import { ViewAuditoria } from "../../components/auditoria/ViewAuditoria";
 const Customer = () => {
 // Llamado a Variables del redux
-    const dispatch =useDispatch()
+    // const dispatch =useDispatch()
 //Inicializacion de estados
     const [loading, setLoading] = useState(false)
     const [customers, setCustomers] = useState<ICustomer[]>([])
@@ -30,6 +37,20 @@ const Customer = () => {
     // Variables para paginacion
   const [page, setPage] = useState<number>(1)
   const [pageNro, setPageNro] = useState<number>(0)
+  const [refres,setRefres] = useState<number>(1)
+
+   //Variables para descarga
+   const [downloadLoading, setDownloadLoading] = useState(false);
+   const [openDescarga, setOpenDescarga] = useState(false);
+
+   //Variables auditoria 
+
+   const [openAuditoria, setOpenAuditoria] = useState<boolean>(false);
+   const [auditoriaData, setAuditoriaData] = useState<string[]>([]);
+   useState<string[]>([]);
+ 
+
+
     
   const handleChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
@@ -37,55 +58,71 @@ const Customer = () => {
 
     const columns: GridColDef[] = [
         {
-            flex: 0.25,
+            flex: 0.10,
             field: 'id',
             headerName: 'ID'
         },
         {
             flex: 0.25,
-            field: 'ruc',
-            headerName: 'RUC'
+            field: 'nombre',
+            headerName: 'Nombre'
         },
         {
             flex: 0.25,
-            field: 'razon_social',
-            headerName: 'Razón Social'
+            field: 'cedula',
+            headerName: 'Cedula'
         },
-        {
-            flex: 0.25,
-            field: 'nombre_fantasia',
-            headerName: 'Nombre Fantasía'
-        },
+      
         {
             flex: 0.25,
             field: 'telefono',
-            headerName: 'Teléfono'
+            headerName: 'Telefono'
         },
         {
             flex: 0.25,
-            field: 'celular',
-            headerName: 'Celular'
+            field: 'tipoCliente',
+            headerName: 'Tipo Cliente',
+            valueGetter: (params) => params.row.tipoCliente ? params.row.tipoCliente.descripcion : ''
         },
         {
+            flex: 0.25,
             field: 'actions',
             headerName: 'Acciones',
             type: 'actions',
+            align: 'center',
+            headerAlign: 'center',
             getActions: (params) => [
-              <GridActionsCellItem
+              <GridActionsCellItem key={params.row.id}
                 icon={<DeleteIcon />}
                 label="Delete"
                 onClick={() => {
                     setCurrent(params.row)
                     setOpenDeleteDialog(true)
                 }}
-              />
+              />, <GridActionsCellItem key={params.row.id}
+              icon={<CloudDownloadIcon/>}
+              label="Descargar"
+              onClick={() => {
+
+                    setCurrent(params.row)
+                    setOpenDescarga(true)
+              }}
+            />,
+            <GridActionsCellItem key={params.row.id}
+              icon={<HistoryEduIcon color='action'/>}
+              label="Auditoria"
+              onClick={() => {
+                const data = params.row.auditoria.historial_cambios?params.row.auditoria.historial_cambios:''
+                handleOpenTradeability(data)
+              }}
+            />
             ],
           },
     ]
 
     useEffect(() => {
         getCustomers()
-    }, [page])
+    }, [page,refres])
 
     const getCustomers = async () => {
         setLoading(true)
@@ -105,20 +142,19 @@ const Customer = () => {
         try {
             
           if (current) {
-            const response = await CustomerService.updateCustomer(formFields)
-            setCustomers(customers.map(customer => customer.id == response.id ? response : customer))
+            await CustomerService.updateCliente(formFields)
+            setRefres(refres?0:1)
 
             toast.success('Cliente actualizado correctamente');
           } else {
-            console.log(formFields)
-            const response = await CustomerService.addCustomer(formFields)
+            const response = await CustomerService.addCliente(formFields)
             
             setCustomers([response, ...customers])
             
             toast.success('Cliente agregado correctamente')
           }
-        } catch (error) {
-            //@ts-ignore
+        } catch (error: any) {
+            
             if(error.response.status==422){
                 setAddEditLoading(false)
                 return
@@ -132,7 +168,14 @@ const Customer = () => {
     }
 
     const handleRowClick = (row: GridRowParams<ICustomer>) => {
-        setCurrent(row.row)
+//@ts-ignore
+        if(row.row.tipoCliente && row.row.tipoCliente.id_tipo){
+            //@ts-ignore
+            setCurrent({...row.row,tipoCliente:row.row.tipoCliente.id_tipo})
+        }else{
+            setCurrent(row.row)
+        }
+       
         setOpenAddEditDialog(true)
     };
 
@@ -144,7 +187,7 @@ const Customer = () => {
     const handleDeleteSubmit = async () => {
         setDeleteLoading(true);
         try {
-            const response = await CustomerService.deleteCustomer(String(current?.id))
+            await CustomerService.deleteCliente(String(current?.id))
             setCustomers(customers.filter(customer => customer.id != current?.id))
             toast.success('Eliminado correctamente');
         } catch (error) {
@@ -160,6 +203,36 @@ const Customer = () => {
         setOpenDeleteDialog(false)
     }
     
+//Funciones para auditoria 
+
+const handleOpenTradeability=(data:string)=>{
+    setAuditoriaData(data.split(';'))
+    setOpenAuditoria(true);
+  }
+  
+  const handleTradabilityOnClose=()=>{
+    setOpenAuditoria(false);
+  }
+  
+//Funciones de descarga 
+
+const handleDownloadSubmit = async()=>{
+    setDownloadLoading(true);
+    try {
+    if(current?.id){
+        await downloadInvoice(current.id)
+    }else{
+        await downloadInvoices()
+    }
+    } catch (error) {
+      toast.error('Error en la descarga')
+    }
+    setCurrent(undefined)
+    setDownloadLoading(false);
+    setOpenDescarga(false);
+  };
+
+
     return (
         <Layout
             sectionTitle="CLIENTES"
@@ -167,7 +240,15 @@ const Customer = () => {
             <>
                 <Grid container spacing={3}>
                     <Grid item lg={12}>
+                    <Box display="flex" justifyContent="space-between">
                         <TableHeader onAdd={() => setOpenAddEditDialog(true)}/>
+                        <Box>
+                            <Button variant="contained" color="primary" onClick={()=>{setOpenDescarga(true)}}>
+                                Abrir formulario de descarga
+                            </Button>
+                        </Box>
+
+                    </Box>
                         <Box sx={{ height: 400 }}>
                             <DataGrid
                                 columns={columns} 
@@ -201,6 +282,16 @@ const Customer = () => {
                         onClose={handleDeleteDialogOnClose}
                     />
                 }
+                {openDescarga &&
+                    <FormularioDescarga
+                       open={openDescarga}
+                        loading={downloadLoading}
+                        onConfirm={handleDownloadSubmit}
+                        onClose={() => setOpenDescarga(false)}
+                        oneCustomer={current?.id}
+                    />
+                }
+                <ViewAuditoria onClose={handleTradabilityOnClose} open={openAuditoria} data={auditoriaData}/>  
             </>
         </Layout>    
     )
