@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Drawer,  Button,Paper, Container } from "@mui/material";
+import { Drawer,  Button,Paper, Container} from "@mui/material";
 import { DataGrid, esES, GridColDef } from '@mui/x-data-grid';
 import { IInvoice } from "../../interfaces/invoices/IInvoices";
 import { envioConsumo, getInvoices } from "../../services/invoices/invoices.service";
@@ -80,6 +80,7 @@ const CampoPage = () => {
 
 
                 <Container style={{ flexGrow: 1, padding: '16px' }}>
+             
                     <Paper  style={{ marginTop:'4em',height: 'calc(100vh - 74px)', width: '100%' }}>
                         <DataGrid
                             rows={datosTable}

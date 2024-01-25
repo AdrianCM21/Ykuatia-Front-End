@@ -33,7 +33,7 @@ export const Pagos = () => {
         {
             flex: 0.10,
             field: 'id',
-            headerName: 'ID'
+            headerName: 'Identificador'
         },
         {
             flex: 0.25,
@@ -50,7 +50,7 @@ export const Pagos = () => {
             field: 'action',
             align: 'center',
             headerAlign: 'center',
-            headerName: 'Action',
+            headerName: 'Accion',
             renderCell: (params:any) => (
                 <Button  key={params.row.id} onClick={()=>handleFormDialogOpen(params.row)}>Realizar Pago</Button>
             )
