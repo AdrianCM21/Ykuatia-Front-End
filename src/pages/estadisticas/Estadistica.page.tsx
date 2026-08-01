@@ -1,136 +1,186 @@
-// EstadisticaPage.tsx
-import { Grid, Card as MuiCard, CardContent, Typography } from '@mui/material';
-import { styled } from '@mui/system';
+import {
+  Box,
+  Chip,
+  Grid,
+  Stack,
+  TextField,
+  Typography,
+  Button,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from '@mui/material';
 import { useEffect, useState } from 'react';
-import { BarChart, Bar, LineChart } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 import Layout from '../../components/layout/Layout';
-import { getCustomers,getCustomersFactura } from '../../services/Customers/CustomerService';
-import ICustomer from '../../interfaces/customers/Customer';
-import { MayorConsumo } from './components/EstadisticaMayorConsumo';
-import { SinPagar } from './components/EstadisticaSinPagar';
-import { ClientesAntiguos } from './components/EstadisticaClientesAntiguos';
-import { MayorDeudaGuaranies } from './components/EstadisticaMayorDeudaGuaranies';
-import { getInvoices } from '../../services/invoices/invoices.service';
-import { IInvoice } from '../../interfaces/invoices/IInvoices';
-import { Line } from 'recharts';
-
-
-const Card = styled(MuiCard)(() => ({
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    height: '100%',
-}));
-
-const Chart = styled(BarChart)(() => ({
-    marginTop: '20px',
-}));
+import { getDashboard, DashboardData } from '../../services/reportes/reportes.service';
+import { toast } from 'react-toastify';
+import { format, subMonths } from 'date-fns';
+import { Link as RouterLink } from 'react-router-dom';
 
 export const EstadisticaPage = () => {
-    const [customers, setCustomers] = useState<ICustomer[]>([]); 
-    const [customersPendiente,setCustomersPendiente] = useState<ICustomer[]>([]); 
-    const [facturas, setFacturas] = useState<IInvoice[]>([]);
+  const [data, setData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [desde, setDesde] = useState(format(subMonths(new Date(), 5), 'yyyy-MM-dd'));
+  const [hasta, setHasta] = useState(format(new Date(), 'yyyy-MM-dd'));
 
-    const [openDialog, setOpenDialog] = useState({ consumo: false, pago: false, antiguo: false, mayorDeudaGuarani: false });
+  useEffect(() => {
+    load();
+  }, []);
 
-    const data = [
-        {name: 'Page A', uv: 4000, pv: 2400, amt: 4400},
-        {name: 'Page B', uv: 5000, pv: 3398, amt: 2210},
-        {name: 'Page C', uv: 3000, pv: 1398, amt: 5210},
-        {name: 'Page D', uv: 2000, pv: 9800, amt: 2290},
-        {name: 'Page E', uv: 2780, pv: 3908, amt: 2000},
-    ];
-
-    const handleOpen = (dialog:any) => {
-        setOpenDialog({ ...openDialog, [dialog]: true });
-    };
-
-    const handleClose = (dialog:any) => {
-        setOpenDialog({ ...openDialog, [dialog]: false });
-    };
-
-    // llamada a la api para obtener los datos de las estadisticas
-    useEffect(() => {
-        getCustomersF();
-        getFacturasF();
-        getCustomersFacturaPendiente()
-    }, []);
-    const getCustomersFacturaPendiente = async () => {
-        try {
-            const response = await getCustomersFactura()
-            setCustomersPendiente(response.resultado);
-        } catch (error) {
-            console.log(error)
-        }
+  const load = async () => {
+    setLoading(true);
+    try {
+      setData(await getDashboard({ desde, hasta }));
+    } catch {
+      toast.error('No se pudo cargar el dashboard');
     }
-    const getCustomersF = async () => {
-        try {
-            const response = await getCustomers(1);
-            setCustomers(response.resultado);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    const getFacturasF = async () => {
-        try {
-            const response = await getInvoices(1);
-            setFacturas(response.resultado);
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    
+    setLoading(false);
+  };
 
+  const kpis = data?.kpis;
 
-    return (
-        <Layout>
-            <Grid container spacing={2}>
-                <Grid item xs={6}>
-                    <Card onClick={() => handleOpen('pago')}>
-                        <CardContent>
-                            <Typography variant="h5">Facturas sin pagar</Typography>
-                            <Chart width={250} height={150} data={data}>
-                                <Bar dataKey="pv" fill="#4682B4" />
-                            </Chart>
-                        </CardContent>
-                    </Card>
-                    <SinPagar data={customersPendiente} open={openDialog.pago} handleClose={() => handleClose('pago')} title="Estadisticas de facturas sin pagar" />
-                </Grid>
-                <Grid item xs={6}>
-                <Card onClick={() => handleOpen('consumo')}>
-                    <CardContent>
-                        <Typography variant="h5">Mayor consumo</Typography>
-                        <LineChart width={250} height={150} data={data}>
-                            <Line type="monotone" dataKey="uv" stroke="#4682B4" />
-                        </LineChart>
-                    </CardContent>
-                </Card>
-                    <MayorConsumo data={facturas} open={openDialog.consumo} handleClose={() => handleClose('consumo')} title="Estadísticas de Mayor consumo" />
-                </Grid>
-                <Grid item xs={6}>
-                    <Card onClick={() => handleOpen('antiguo')}>
-                        <CardContent>
-                            <Typography variant="h5">Cliente más antiguo</Typography>
-                            <Chart width={250} height={150} data={data}>
-                                <Bar dataKey="amt" fill="#4682B4" />
-                            </Chart>
-                        </CardContent>
-                    </Card>
-                    <ClientesAntiguos data={customers} open={openDialog.antiguo} handleClose={() => handleClose('antiguo')} title="Estadísticas de Cliente más antiguo" />
-                </Grid>
-                <Grid item xs={6}>
-                    <Card onClick={() => handleOpen('mayorDeudaGuarani')}>
-                        <CardContent>
-                            <Typography variant="h5">Mayor deuda en guaranies</Typography>
-                            <Chart width={250} height={150} data={data}>
-                                <Bar dataKey="uv" fill="#4682B4" />
-                            </Chart>
-                        </CardContent>
-                    </Card>
-                    <MayorDeudaGuaranies data={customersPendiente} open={openDialog.mayorDeudaGuarani} handleClose={() => handleClose('mayorDeudaGuarani')} title="Estadísticas de mayor deuda en guaranies" />
-                </Grid>
-            </Grid>
-        </Layout>
-    );
+  return (
+    <Layout sectionTitle="DASHBOARD">
+      <>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} mb={2} alignItems="center">
+          <TextField
+            type="date"
+            size="small"
+            label="Desde"
+            InputLabelProps={{ shrink: true }}
+            value={desde}
+            onChange={(e) => setDesde(e.target.value)}
+          />
+          <TextField
+            type="date"
+            size="small"
+            label="Hasta"
+            InputLabelProps={{ shrink: true }}
+            value={hasta}
+            onChange={(e) => setHasta(e.target.value)}
+          />
+          <Button variant="contained" onClick={load} disabled={loading}>
+            Actualizar
+          </Button>
+        </Stack>
+
+        <Typography color="text.secondary" mb={2}>
+          Período {data?.desde?.slice(0, 10) || '-'} a {data?.hasta?.slice(0, 10) || '-'}.
+          {loading ? ' Cargando…' : ''}
+        </Typography>
+
+        <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap mb={3}>
+          <Chip
+            color="primary"
+            label={`Cobrado ${Number(kpis?.cobradoPeriodo || 0).toLocaleString('es-PY')} Gs`}
+          />
+          <Chip
+            color="warning"
+            label={`Deuda ${Number(kpis?.deudaTotal || 0).toLocaleString('es-PY')} Gs`}
+          />
+          <Chip
+            label={`Mora est. ${Number(kpis?.recargoEstimado || 0).toLocaleString('es-PY')} Gs`}
+          />
+          <Chip label={`${kpis?.facturasAbiertas ?? 0} facturas abiertas`} />
+          <Chip
+            color="success"
+            label={`Mes actual ${Number(kpis?.cobradoMesActual || 0).toLocaleString('es-PY')} Gs`}
+          />
+          <Chip
+            label={`Mes ant. ${Number(kpis?.cobradoMesAnterior || 0).toLocaleString('es-PY')} Gs`}
+          />
+          {kpis?.variacionMesPct != null && (
+            <Chip
+              color={kpis.variacionMesPct >= 0 ? 'success' : 'error'}
+              label={`Var. mes ${kpis.variacionMesPct}%`}
+            />
+          )}
+        </Stack>
+
+        <Grid container spacing={3}>
+          <Grid item xs={12} md={7}>
+            <Typography fontWeight={700} mb={1}>
+              Serie de cobranza
+            </Typography>
+            <Box sx={{ width: '100%', height: 280 }}>
+              <ResponsiveContainer>
+                <LineChart data={data?.serieCobranza || []}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="periodo" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="total" stroke="#0B6E6E" name="Cobrado" />
+                </LineChart>
+              </ResponsiveContainer>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={5}>
+            <Typography fontWeight={700} mb={1}>
+              Deuda por aging
+            </Typography>
+            <Box sx={{ width: '100%', height: 280 }}>
+              <ResponsiveContainer>
+                <BarChart data={data?.cobranzaPorBucket || []}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="bucket" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="monto" fill="#1F4E79" name="Deuda" />
+                </BarChart>
+              </ResponsiveContainer>
+            </Box>
+          </Grid>
+          <Grid item xs={12}>
+            <Box display="flex" justifyContent="space-between" alignItems="center" mb={1}>
+              <Typography fontWeight={700}>Top deudas</Typography>
+              <Button component={RouterLink} to="/morosos" size="small">
+                Ver morosos
+              </Button>
+            </Box>
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Cliente</TableCell>
+                  <TableCell>Deuda</TableCell>
+                  <TableCell>Mora est.</TableCell>
+                  <TableCell>Días</TableCell>
+                  <TableCell>Aging</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {(data?.topMorosos || []).map((m) => (
+                  <TableRow key={m.id_cliente}>
+                    <TableCell>{m.nombre}</TableCell>
+                    <TableCell>{Number(m.monto_deuda).toLocaleString('es-PY')} Gs</TableCell>
+                    <TableCell>
+                      {Number(m.recargo_estimado || 0).toLocaleString('es-PY')} Gs
+                    </TableCell>
+                    <TableCell>{m.dias_mora}</TableCell>
+                    <TableCell>
+                      <Chip size="small" label={m.bucket} color="warning" />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Grid>
+        </Grid>
+      </>
+    </Layout>
+  );
 };

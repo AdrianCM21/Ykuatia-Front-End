@@ -1,36 +1,51 @@
 import axios from 'axios';
+import { toast } from 'react-toastify';
 import config from '.';
 import { ResponseError422 } from '../services/ErrorHandlerService';
 import { store } from '../redux/store';
 import { resetError422 } from '../redux/error422Slice';
+import { TOKEN_KEY } from './authStorage';
 
-
- const axiosGlogal= axios.create({
+const axiosGlogal = axios.create({
   baseURL: config.baseUrl,
-  headers: {
-    "x-api-key": config.apiKey
+});
+
+axiosGlogal.interceptors.request.use(
+  (requestConfig) => {
+    const token = localStorage.getItem(TOKEN_KEY);
+    if (token) {
+      requestConfig.headers.Authorization = `Bearer ${token}`;
+    }
+    return requestConfig;
   },
-})
+  (error) => Promise.reject(error)
+);
 
-axiosGlogal.interceptors.request.use((config) => {
-  const token = localStorage.getItem('x-token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, (error) => {
-  return Promise.reject(error);
-});
+axiosGlogal.interceptors.response.use(
+  (response) => {
+    store.dispatch(resetError422());
+    return response;
+  },
+  (error) => {
+    const status = error.response?.status;
 
-// Estas funciones atrapan las respuestas de todas la peticines que realizes 
-axiosGlogal.interceptors.response.use((response)=>{
-  store.dispatch(resetError422(''))
-  return response
-}, (error)=> {
-  //En caso de un error 422 se ejecuta automaticamente la funcion para manejarlas 
-  if(error.response.status==422){
-    ResponseError422(error.response.data.errors)
+    if (status === 422 && error.response?.data?.errors) {
+      ResponseError422(error.response.data.errors);
+    }
+
+    if (status === 401) {
+      localStorage.removeItem(TOKEN_KEY);
+      if (window.location.pathname !== '/login') {
+        window.location.assign('/login');
+      }
+    }
+
+    if (status === 403) {
+      toast.error('No tenés permiso para esta acción');
+    }
+
+    return Promise.reject(error);
   }
-  return(Promise.reject(error))
-});
-export default axiosGlogal
+);
+
+export default axiosGlogal;

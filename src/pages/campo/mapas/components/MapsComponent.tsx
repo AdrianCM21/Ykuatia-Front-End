@@ -1,23 +1,27 @@
+import { useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
+import type { LatLngExpression, LatLngTuple } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 interface MapProps {
-    center: number[];
+    center: LatLngExpression;
     zoom: number;
 }
 
 const ChangeView = ({ center, zoom }: MapProps) => {
     const map = useMap();
-    map.setView(center, zoom);
+    useEffect(() => {
+        map.setView(center, zoom);
+    }, [map, center, zoom]);
     return null;
 }
 
 interface MapComponentProps {
-    locations: {cliente:string, posicion:[number,number]}[];
+    locations: {cliente:string, posicion: LatLngTuple}[];
 }
 
 export const MapComponent = ({ locations }: MapComponentProps) => {
-    const initialPosition = [ -26.6324065, -55.51918569999999]; // Coordenadas iniciales
+    const initialPosition: LatLngTuple = [ -26.6324065, -55.51918569999999]; // Coordenadas iniciales
 
     return (
         <MapContainer

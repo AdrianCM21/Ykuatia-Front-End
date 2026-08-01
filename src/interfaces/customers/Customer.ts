@@ -16,5 +16,5 @@ export default interface ICustomer {
     auditoria?:IAuditoria
     factura:IInvoice[]
     locacion?:string
-    
+    nro_medidor?: string | null
 }
