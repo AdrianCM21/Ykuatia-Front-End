@@ -5,7 +5,7 @@ import { store } from "../../redux/store"
 // En este manejador accedemos a las variable globlales 
 const ResponseError422=(arrayErros:IErrorResponse422[])=>{
     // Reseteamos todos los errores anteriores
-    store.dispatch(resetError422(''))
+    store.dispatch(resetError422())
     // Enviamos la lista con los errores que nos mandan y se guardan en el redux
     store.dispatch(addError422(arrayErros))
     toast.error('Error en los datos enviados.')

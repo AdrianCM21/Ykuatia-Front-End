@@ -1,52 +1,58 @@
-import Button from '@mui/material/Button'
-import LoadingButton from '@mui/lab/LoadingButton'
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Typography } from '@mui/material';
+import { AppDialog } from './dialogs/AppDialog';
 
 interface IProps {
-  open: boolean
-  loading: boolean
-  onConfirm: () => void
-  onClose: () => void
+  open: boolean;
+  loading: boolean;
+  onConfirm: () => void;
+  onClose: () => void;
+  title?: string;
+  description?: string;
 }
 
-const DeleteDialog = ({ open, loading, onConfirm, onClose }: IProps) => {
-
-  const handleDialogClose = (
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    event: React.MouseEvent<HTMLButtonElement, MouseEvent>,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    reason: "backdropClick" | "escapeKeyDown"
-  ) => {
-    onClose();
-  };
-
+const DeleteDialog = ({
+  open,
+  loading,
+  onConfirm,
+  onClose,
+  title = 'Eliminar registro',
+  description = 'Esta acción no se puede deshacer. ¿Confirmás que querés eliminar este registro?',
+}: IProps) => {
   return (
-    <>
-      <Dialog
-        fullWidth
-        open={open}
-        maxWidth='sm'
-        scroll='body'
-        onClose={handleDialogClose}
-      >
-        <DialogTitle>{'CONFIRMAR ELIMINACIÓN'}</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            {'Esta seguro de que desea eliminar el registro?'}
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions sx={{ justifyContent: 'right' }}>
-          <LoadingButton size='large' color='error' type='submit' variant='contained' startIcon={<DeleteIcon />} onClick={onConfirm} loading={loading}>
-            Eliminar
-          </LoadingButton>
-          <Button size='large' variant='outlined' onClick={onClose}>
+    <AppDialog
+      open={open}
+      onClose={onClose}
+      disableClose={loading}
+      eyebrow="Confirmación"
+      title={title}
+      subtitle={description}
+      maxWidth="xs"
+      scrollable={false}
+      actions={
+        <>
+          <Button size="large" variant="outlined" onClick={onClose} disabled={loading}>
             Cancelar
           </Button>
-        </DialogActions>
-      </Dialog>
-    </>
-  )
+          <Button
+            size="large"
+            color="error"
+            variant="contained"
+            startIcon={<DeleteIcon />}
+            onClick={onConfirm}
+            loading={loading}
+          >
+            Eliminar
+          </Button>
+        </>
+      }
+    >
+      <Typography variant="body2" color="text.secondary">
+        Revisá que sea el registro correcto antes de continuar.
+      </Typography>
+    </AppDialog>
+  );
 };
 
 export default DeleteDialog;

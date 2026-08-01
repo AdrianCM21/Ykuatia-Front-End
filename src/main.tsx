@@ -1,15 +1,24 @@
-
-import ReactDOM from 'react-dom/client'
-import { RouterProvider } from "react-router-dom";
+import ReactDOM from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
 import { router } from './routes/index.routes';
 import { Provider } from 'react-redux';
-import {store} from './redux/store'
-// import './index.css'
+import { store } from './redux/store';
+import { AuthProvider } from './context/AuthContext';
+import { AppThemeProvider } from './theme/AppThemeProvider';
+import './index.css';
 
- const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
+if ('scrollRestoration' in window.history) {
+  window.history.scrollRestoration = 'manual';
+}
 
- root.render(
-    <Provider  store={store}>
-    <RouterProvider  router={router} />
+const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
+
+root.render(
+  <Provider store={store}>
+    <AppThemeProvider>
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
+    </AppThemeProvider>
   </Provider>
-)
+);

@@ -1,49 +1,89 @@
-
 import {
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
   TextField,
-  Box,
-  Typography,
+  Stack,
 } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { AppDialog } from '../../../components/dialogs/AppDialog';
+import { formatGs } from '../../../utils/formatGs';
 
 interface Props {
-  open:boolean
-  onClose:()=>void
-  onSubmit:(data:any)=>void
+  open: boolean;
+  onClose: () => void;
+  onSubmit: (data: Record<string, unknown>) => void | Promise<void>;
 }
 
-export const CajaFormDialog = ({ open, onClose,onSubmit }:Props) => {
-  const { handleSubmit, control, register } = useForm();
+type FormValues = {
+  tipo_transacion: string;
+  monto: string;
+  motivo: string;
+};
 
- 
+export const CajaFormDialog = ({ open, onClose, onSubmit }: Props) => {
+  const { handleSubmit, control, register, reset, watch } = useForm<FormValues>({
+    defaultValues: { tipo_transacion: '2', monto: '', motivo: '' },
+  });
+  const [loading, setLoading] = useState(false);
+  const monto = Number(watch('monto') || 0);
+  const tipo = watch('tipo_transacion');
+
+  useEffect(() => {
+    if (open) {
+      reset({ tipo_transacion: '2', monto: '', motivo: '' });
+      setLoading(false);
+    }
+  }, [open, reset]);
+
+  const submit = async (data: FormValues) => {
+    setLoading(true);
+    try {
+      await onSubmit(data);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
-      <DialogTitle>
-        <Typography variant="h5">Módulo de Caja</Typography>
-      </DialogTitle>
-      <DialogContent>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <FormControl fullWidth variant="outlined" margin="normal">
-            <InputLabel id="tipo-operacion-label">Tipo de Operación</InputLabel>
+    <AppDialog
+      open={open}
+      onClose={onClose}
+      disableClose={loading}
+      eyebrow="Caja"
+      title="Registrar movimiento"
+      subtitle="Anotá un ingreso o egreso manual del período abierto."
+      maxWidth="sm"
+      actions={
+        <>
+          <Button onClick={onClose} disabled={loading} size="large" variant="outlined">
+            Cancelar
+          </Button>
+          <Button
+            form="caja-movimiento-form"
+            type="submit"
+            loading={loading}
+            variant="contained"
+            size="large"
+          >
+            Guardar movimiento
+          </Button>
+        </>
+      }
+    >
+      <form id="caja-movimiento-form" onSubmit={handleSubmit(submit)}>
+        <Stack spacing={2}>
+          <FormControl fullWidth required>
+            <InputLabel id="tipo-operacion-label">Tipo de operación</InputLabel>
             <Controller
               name="tipo_transacion"
               control={control}
-              defaultValue=""
+              rules={{ required: true }}
               render={({ field }) => (
-                <Select
-                  label="Tipo de Operación"
-                  labelId="tipo-operacion-label"
-                  {...field}
-                >
+                <Select label="Tipo de operación" labelId="tipo-operacion-label" {...field}>
                   <MenuItem value="2">Ingreso</MenuItem>
                   <MenuItem value="1">Egreso</MenuItem>
                 </Select>
@@ -52,35 +92,27 @@ export const CajaFormDialog = ({ open, onClose,onSubmit }:Props) => {
           </FormControl>
 
           <TextField
-            {...register('monto')}
+            {...register('monto', { required: true, min: 1 })}
             fullWidth
             label="Monto"
-            variant="outlined"
-            margin="normal"
             type="number"
+            inputProps={{ min: 1 }}
+            required
+            helperText={monto > 0 ? `${tipo === '1' ? 'Egreso' : 'Ingreso'} de ${formatGs(monto)}` : ' '}
           />
 
           <TextField
-            {...register('motivo')}
+            {...register('motivo', { required: true, minLength: 2, maxLength: 80 })}
             fullWidth
-            label="Razón"
-            variant="outlined"
-            margin="normal"
+            label="Motivo"
+            required
+            multiline
+            minRows={2}
+            inputProps={{ maxLength: 80 }}
+            helperText="Máximo 80 caracteres"
           />
-
-          <Box mt={2}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Agregar Operación
-            </Button>
-          </Box>
-        </form>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose} color="primary">
-          Cancelar
-        </Button>
-      </DialogActions>
-    </Dialog>
+        </Stack>
+      </form>
+    </AppDialog>
   );
 };
-

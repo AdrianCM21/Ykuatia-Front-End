@@ -1,96 +1,130 @@
 import * as React from 'react';
-import {  Link as RouterLink } from "react-router-dom";
-import {  createTheme, ThemeProvider } from '@mui/material/styles';
-import ListItemButton from "@mui/material/ListItemButton";
-import CssBaseline from '@mui/material/CssBaseline';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
-import Badge from '@mui/material/Badge';
+import Button from '@mui/material/Button';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Button, ListItemText } from '@mui/material';
-import { styled } from "@mui/system";
 import { LogoutButtonMovil } from './LogoutBottonMovil';
+import { scrollAppToTop } from '../../utils/scrollToTop';
+
 interface IProps {
-    children: JSX.Element
-    sectionTitle?: string
-    Action?:() => void
-    actionText?:string
-  }
+  children: React.ReactElement;
+  sectionTitle?: string;
+  Action?: () => void;
+  actionText?: string;
+}
 
-const mdTheme = createTheme();
-const CustomListItemButton = styled(ListItemButton)(({ theme, selected }) => ({
-    color: selected ? theme.palette.primary.main : theme.palette.text.primary,
-    margin: 0,
-    padding: 0,
-  }));
+export const LayoutMovil = ({ children, sectionTitle, Action, actionText }: IProps) => {
+  const location = useLocation();
 
-export const LayoutMovil = ({ children, sectionTitle, Action, actionText }:IProps) => {
+  React.useEffect(() => {
+    scrollAppToTop();
+  }, [location.pathname, sectionTitle]);
+
+  const navItems = [
+    { to: '/campo/factura', label: 'Cargar consumo' },
+    { to: '/campo/mapa', label: 'Mapa' },
+  ];
+
   return (
-    <ThemeProvider theme={mdTheme}>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <AppBar position="absolute" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-          <Toolbar sx={{ pr: '24px',display:'flex',justifyContent:'space-between',flexDirection:'row'}}>
-
-            <React.Fragment>
-
-            
-            <RouterLink to="/campo/factura" style={{ textDecoration: "none", color: "inherit" }}>
-        <CustomListItemButton selected={location.pathname === "/campo/factura"}>
-          <ListItemButton>
-            <ListItemText>
-              <Typography color={"#fff"}>Carga Facturas</Typography>
-            </ListItemText>
-          </ListItemButton>
-        </CustomListItemButton>
-      </RouterLink>
-
-     <RouterLink
-        to="/campo/mapa"
-        style={{ textDecoration: "none", color: "inherit" }}
-      >
-        <CustomListItemButton selected={location.pathname === "/campo/mapa"}>
-          <ListItemButton >
-
-            <Typography color={"#fff"}>Mapas</Typography>
-          </ListItemButton>
-        </CustomListItemButton>
-      </RouterLink>
-      </React.Fragment>
-            <Badge color="secondary">
-              <LogoutButtonMovil />
-            </Badge>
+    <>
+      <Box sx={{ display: 'flex', height: '100vh', overflow: 'hidden' }}>
+        <AppBar position="fixed" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+          <Toolbar sx={{ gap: 1, justifyContent: 'space-between' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, minWidth: 0 }}>
+              <Box
+                component="img"
+                src="/brand/ykuatia-logo.png"
+                alt="Ykuatia"
+                sx={{
+                  width: 34,
+                  height: 34,
+                  borderRadius: 1.2,
+                  bgcolor: 'rgba(255,255,255,0.92)',
+                  objectFit: 'cover',
+                  p: 0.35,
+                  flexShrink: 0,
+                }}
+              />
+              <Box sx={{ display: 'flex', gap: 0.5, overflowX: 'auto' }}>
+                {navItems.map((item) => {
+                  const selected = location.pathname === item.to;
+                  return (
+                    <Button
+                      key={item.to}
+                      component={RouterLink}
+                      to={item.to}
+                      size="small"
+                      sx={{
+                        color: '#fff',
+                        bgcolor: selected ? 'rgba(255,255,255,0.18)' : 'transparent',
+                        whiteSpace: 'nowrap',
+                        px: 1.5,
+                        '&:hover': { bgcolor: 'rgba(255,255,255,0.22)' },
+                      }}
+                    >
+                      {item.label}
+                    </Button>
+                  );
+                })}
+              </Box>
+            </Box>
+            <LogoutButtonMovil />
           </Toolbar>
         </AppBar>
+
         <Box
+          id="yk-main-scroll"
           component="main"
           sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light'
-                ? theme.palette.grey[100]
-                : theme.palette.grey[900],
+            background:
+              'radial-gradient(circle at top left, rgba(94,200,200,0.25), transparent 35%), #E8F2F2',
             flexGrow: 1,
             height: '100vh',
-            overflow: 'auto',
+            overflowY: 'auto',
+            overflowX: 'hidden',
           }}
         >
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-            {sectionTitle ? (Action ? (
-              <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between', padding: '0px 5%' }}>
-                <Typography variant="h2">{sectionTitle}</Typography>
-                <div><Button variant="contained" onClick={() => { Action() }}>{actionText ? actionText : 'Action'}</Button></div>
-              </Box>) : <Typography variant="h2">{sectionTitle}</Typography>) : ''}
+          <Container maxWidth="lg" sx={{ mt: 3, mb: 4 }} className="yk-fade-up">
+            {sectionTitle ? (
+              Action ? (
+                <Box
+                  sx={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    gap: 1,
+                    mb: 2,
+                    flexWrap: 'wrap',
+                  }}
+                >
+                  <Typography variant="h5" className="yk-brand-title">
+                    {sectionTitle}
+                  </Typography>
+                  <Button variant="contained" onClick={Action}>
+                    {actionText || 'Acción'}
+                  </Button>
+                </Box>
+              ) : (
+                <Typography variant="h5" className="yk-brand-title" sx={{ mb: 2 }}>
+                  {sectionTitle}
+                </Typography>
+              )
+            ) : null}
             <Paper
               sx={{
-                p: 3,
+                p: { xs: 2, md: 3 },
                 display: 'flex',
                 flexDirection: 'column',
+                borderRadius: 3,
+                bgcolor: 'rgba(255,255,255,0.94)',
               }}
             >
               {children}
@@ -98,8 +132,7 @@ export const LayoutMovil = ({ children, sectionTitle, Action, actionText }:IProp
           </Container>
         </Box>
       </Box>
-      <ToastContainer />
-    </ThemeProvider>
+      <ToastContainer position="bottom-center" />
+    </>
   );
-}
-
+};

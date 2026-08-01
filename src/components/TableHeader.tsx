@@ -1,3 +1,4 @@
+import React from 'react'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -7,7 +8,7 @@ import AddIcon from '@mui/icons-material/Add'
 
 interface TableHeaderProps {
   onAdd?: () => void,
-  Search?:JSX.Element
+  Search?: React.ReactElement
 }
 
 const TableHeader = ({ onAdd,Search }: TableHeaderProps) => {
@@ -15,7 +16,7 @@ const TableHeader = ({ onAdd,Search }: TableHeaderProps) => {
     <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' ,width:'100%'}}>
           <Box sx={{display: 'flex',width:'100%',justifyContent:'space-between',flexDirection:'row'}}>
-            {onAdd&&<Button variant="outlined" sx={{ mb: 2 }} onClick={onAdd} startIcon={<AddIcon fontSize='small' />}>
+            {onAdd&&<Button variant="contained" sx={{ mb: 2 }} onClick={onAdd} startIcon={<AddIcon fontSize='small' />}>
               Agregar
             </Button>}
             {Search}

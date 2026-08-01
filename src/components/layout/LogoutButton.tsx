@@ -1,27 +1,38 @@
-import React from 'react';
 import Button from '@mui/material/Button';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp'; // Importa un icono de Material-UI
-import { logout } from '../../services/auth/auth';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useAuth } from '../../context/AuthContext';
+
 const LogoutButton = () => {
-  const handleLogout = async() => {
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleLogout = () => {
     try {
-      logout()
-      toast.success('Sesion cerrada');
-      location.reload()
-    } catch (error) {
-      toast.error('No se pudo cerrar sesion')
+      logout();
+      toast.success('Sesión cerrada');
+      navigate('/login');
+    } catch {
+      toast.error('No se pudo cerrar sesión');
     }
   };
 
   return (
     <Button
       variant="outlined"
-      sx={{color:'#fff'}}
-      startIcon={<ExitToAppIcon />} // Agrega un icono de salida a la derecha del texto
+      startIcon={<ExitToAppIcon />}
       onClick={handleLogout}
+      sx={{
+        color: '#fff',
+        borderColor: 'rgba(255,255,255,0.55)',
+        '&:hover': {
+          borderColor: '#fff',
+          bgcolor: 'rgba(255,255,255,0.1)',
+        },
+      }}
     >
-      Cerrar Sesión
+      Salir
     </Button>
   );
 };

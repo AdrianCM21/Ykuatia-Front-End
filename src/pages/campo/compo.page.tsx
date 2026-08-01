@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Drawer,  Button,Paper, Container} from "@mui/material";
-import { DataGrid, esES, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { esES } from '@mui/x-data-grid/locales';
 import { IInvoice } from "../../interfaces/invoices/IInvoices";
 import { envioConsumo, getInvoices } from "../../services/invoices/invoices.service";
 import { FormCompletadoConsumo } from "../Invoices/components/formCompletadoConsumo";
@@ -54,7 +55,7 @@ const CampoPage = () => {
             flex: 0.25,
             field: 'cliente',
             headerName: 'Nombre del cliente',
-            valueGetter: (params) => (params.row.cliente as any)?.nombre
+            valueGetter: (_value, row) => (row.cliente as any)?.nombre
         },
         {
             flex: 0.25,
@@ -75,7 +76,7 @@ const CampoPage = () => {
             <Drawer
                 anchor="right"
                 open={true}
-                PaperProps={{ style: { width: '100vw' } }}
+                slotProps={{ paper: { style: { width: '100vw' } } }}
             >
 
 

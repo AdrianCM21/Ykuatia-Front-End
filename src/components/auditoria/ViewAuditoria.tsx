@@ -1,64 +1,62 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import { Backdrop } from '@mui/material';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
+import { Box, Button, Stack, Typography, alpha } from '@mui/material';
+import { AppDialog } from '../dialogs/AppDialog';
+
 interface IProps {
-    onClose: () => void
-    open: boolean
-    data:string[]
-  }
-const style = {
-  position: 'absolute',
-  top: '49%',
-  left: '58%',
-  transform: 'translate(-50%, -50%)',
-  width: '78vw',
-  height:'70vh',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-  borderRadius:'1.8%'
-  
-};
-
-export const ViewAuditoria=({onClose,open,data }: IProps)=> {
-  return (
-    <Modal
-    aria-labelledby="transition-modal-title"
-    aria-describedby="transition-modal-description"
-        open={open}
-        onClose={onClose}
-        closeAfterTransition
-        slots={{ backdrop: Backdrop }}
-        >
-
-    
-        <Box sx={style}>
-            <div style={{width:'100%',display:'flex',justifyContent: 'space-between',position:'sticky',borderBottom:'2px solid #000'}}>
-                <div></div>
-                <Typography id="modal-modal-title" variant="h5" component="h2">
-            Auditoria
-          </Typography>
-          <Button onClick={onClose}>Salir</Button>
-            </div>
-            <Box sx={{width:'100%',height:'95%',overflow:'auto'}}>
-            {data.map((e,index)=>{
-                return(
-                <ListItem  key={index} component="div" disablePadding>
-                    <ListItemButton>
-                         <ListItemText primary={e} />
-                    </ListItemButton>
-                </ListItem>)
-            })
-            }
-            </Box>
-        </Box>
-    </Modal>
-  );
+  onClose: () => void;
+  open: boolean;
+  data: string[];
 }
 
+export const ViewAuditoria = ({ onClose, open, data }: IProps) => {
+  const entries = (data || []).map((line) => line.trim()).filter(Boolean);
+
+  return (
+    <AppDialog
+      open={open}
+      onClose={onClose}
+      eyebrow="Cliente"
+      title="Historial"
+      subtitle="Cambios y movimientos registrados para este vecino."
+      maxWidth="sm"
+      actions={
+        <Button onClick={onClose} variant="contained" size="large">
+          Cerrar
+        </Button>
+      }
+    >
+      {entries.length ? (
+        <Stack spacing={0}>
+          {entries.map((line, index) => (
+            <Stack
+              key={`${index}-${line.slice(0, 24)}`}
+              direction="row"
+              spacing={1.5}
+              sx={{
+                py: 1.25,
+                borderTop: index ? '1px solid' : 'none',
+                borderColor: 'divider',
+              }}
+            >
+              <Box
+                sx={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: '50%',
+                  mt: 0.6,
+                  flexShrink: 0,
+                  bgcolor: 'primary.main',
+                  boxShadow: `0 0 0 4px ${alpha('#0B6E6E', 0.12)}`,
+                }}
+              />
+              <Typography variant="body2" sx={{ whiteSpace: 'pre-wrap' }}>
+                {line}
+              </Typography>
+            </Stack>
+          ))}
+        </Stack>
+      ) : (
+        <Typography color="text.secondary">Sin movimientos registrados.</Typography>
+      )}
+    </AppDialog>
+  );
+};

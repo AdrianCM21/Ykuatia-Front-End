@@ -1,60 +1,135 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
-import Home from "../pages/Home";
-import Customer from "../pages/Customer/Customer.page";
-import { SignIn } from "../pages/login/SingIn";
-import { isAloneCampo, isAuthenticated, isCampo } from "../services/auth/auth";
-import { Invoices } from "../pages/Invoices/Invoices.page";
-import { MapsMainScreen } from "../pages/mapas/MapsMainScreen";
-import { Pagos } from "../pages/pagos/Pagos.page";
-import { EstadisticaPage } from "../pages/estadisticas/Estadistica.page";
-import { CajaPage } from "../pages/caja/Caja.page";
-import { ConfiguracionesPage } from "../pages/configuraciones/Configuraciones.page";
-import { CampoPage } from "../pages/campo/compo.page";
-import { MapsMainScreenMovil } from "../pages/campo/mapas/MapsMainScreen";
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import Home from '../pages/Home';
+import Customer from '../pages/Customer/Customer.page';
+import { SignIn } from '../pages/login/SingIn';
+import { Invoices } from '../pages/Invoices/Invoices.page';
+import { MapsMainScreen } from '../pages/mapas/MapsMainScreen';
+import { Pagos } from '../pages/pagos/Pagos.page';
+import { EstadisticaPage } from '../pages/estadisticas/Estadistica.page';
+import { CajaPage } from '../pages/caja/Caja.page';
+import { ConfiguracionesPage } from '../pages/configuraciones/Configuraciones.page';
+import { UsuariosPage } from '../pages/usuarios/Usuarios.page';
+import { MorososPage } from '../pages/morosos/Morosos.page';
+import { AuditoriaPage } from '../pages/auditoria/Auditoria.page';
+import { CampoPage } from '../pages/campo/compo.page';
+import { MapsMainScreenMovil } from '../pages/campo/mapas/MapsMainScreen';
+import { ProtectedRoute } from '../components/auth/ProtectedRoute';
 
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: isAloneCampo() ? <Navigate to="campo/factura" /> :isAuthenticated()?<Home /> : <Navigate to="/login" />,
+    element: (
+      <ProtectedRoute requireCampo redirectCampoTo="/campo/factura">
+        <Home />
+      </ProtectedRoute>
+    ),
   },
   {
-    path:'/pagos',
-    element: isAuthenticated() ? <Pagos /> : <Navigate to="/login" />,
+    path: '/pagos',
+    element: (
+      <ProtectedRoute requirePerm="pagos">
+        <Pagos />
+      </ProtectedRoute>
+    ),
   },
   {
     path: 'estadisticas',
-    element: isAuthenticated() ? <EstadisticaPage/> : <Navigate to="/login" />,
+    element: (
+      <ProtectedRoute requirePerm="estadisticas">
+        <EstadisticaPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: 'clientes',
-    element: isAuthenticated() ? <Customer /> : <Navigate to="/login" />,
+    element: (
+      <ProtectedRoute requirePerm="clientes">
+        <Customer />
+      </ProtectedRoute>
+    ),
   },
   {
     path: 'facturas',
-    element: isAuthenticated() ? <Invoices /> : <Navigate to="/login" />,
+    element: (
+      <ProtectedRoute requirePerm="facturas">
+        <Invoices />
+      </ProtectedRoute>
+    ),
   },
   {
     path: 'caja',
-    element: isAuthenticated() ? <CajaPage /> : <Navigate to="/login" />,
+    element: (
+      <ProtectedRoute requirePerm="caja">
+        <CajaPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: 'login',
-    element: !isCampo() ? <SignIn /> : <Navigate to="/" />,
+    element: (
+      <ProtectedRoute requireGuest>
+        <SignIn />
+      </ProtectedRoute>
+    ),
   },
   {
     path: 'mapas',
-    element: isAuthenticated() ? <MapsMainScreen /> : <Navigate to="/login" />,
-  }, 
+    element: (
+      <ProtectedRoute requirePerm="mapas">
+        <MapsMainScreen />
+      </ProtectedRoute>
+    ),
+  },
   {
     path: 'campo/factura',
-    element: isCampo() ? <CampoPage /> : <Navigate to="/login" />,
+    element: (
+      <ProtectedRoute requireCampo>
+        <CampoPage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: 'campo/mapa',
-    element: isCampo() ? <MapsMainScreenMovil /> : <Navigate to="/login" />,
+    element: (
+      <ProtectedRoute requireCampo>
+        <MapsMainScreenMovil />
+      </ProtectedRoute>
+    ),
   },
   {
     path: 'configuracion',
-    element: isAuthenticated() ? <ConfiguracionesPage /> : <Navigate to="/login" />,
+    element: (
+      <ProtectedRoute requirePerm="config">
+        <ConfiguracionesPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: 'usuarios',
+    element: (
+      <ProtectedRoute requirePerm="usuarios">
+        <UsuariosPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: 'morosos',
+    element: (
+      <ProtectedRoute requirePerm="morosos">
+        <MorososPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: 'auditoria',
+    element: (
+      <ProtectedRoute requirePerm="auditoria">
+        <AuditoriaPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: '*',
+    element: <Navigate to="/" replace />,
   },
 ]);
